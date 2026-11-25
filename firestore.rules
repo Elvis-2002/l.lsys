@@ -1,0 +1,180 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ---------- identity helpers ----------
+    function signedIn() { return request.auth != null; }
+    function userDoc() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
+    function hasUser() { return signedIn() && exists(/databases/$(database)/documents/users/$(request.auth.uid)); }
+    function isActive() { return userDoc().get('active', true) != false; }
+    function isAdmin() { return hasUser() && userDoc().role == 'admin' && isActive(); }
+    function isStaff() { return hasUser() && userDoc().role in ['admin', 'user'] && isActive(); }
+
+    // ---------- write helpers ----------
+    function created() { return request.resource.data.rev == 1 && request.resource.data.syncedAt == request.time; }
+    function edited() { return request.resource.data.rev == resource.data.rev + 1 && request.resource.data.syncedAt == request.time && request.resource.data.id == resource.data.id; }
+    function docRef(col, id) { return /databases/$(database)/documents/$(col)/$(id); }
+    function validPaymentMethod(method) { return method in ['Cash', 'MTN Mobile Money', 'Airtel Money']; }
+
+    // A later payment must be created in the same atomic transaction that
+    // advances the sale's paidTotal. This prevents two devices from both using
+    // the same stale balance and over-collecting it.
+    function paymentMatchesSaleUpdate(saleId, paymentId, amount) {
+      let beforeRef = docRef('sales', saleId);
+      let afterSale = getAfter(beforeRef).data;
+      let beforeSale = get(beforeRef).data;
+      return exists(beforeRef)
+        && afterSale.lastPaymentId == paymentId
+        && afterSale.lastPaymentAmount == amount
+        && afterSale.paidTotal == beforeSale.get('paidTotal', 0) + amount
+        && afterSale.paidTotal <= afterSale.total
+        && existsAfter(docRef('payments', paymentId))
+        && getAfter(docRef('payments', paymentId)).data.saleId == saleId
+        && getAfter(docRef('payments', paymentId)).data.amount == amount;
+    }
+
+    // ---------- accounts and devices ----------
+    match /users/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create: if isAdmin() && request.resource.data.role == 'user'
+        && request.resource.data.keys().hasOnly(['email', 'displayName', 'role', 'active', 'createdAt', 'createdBy']);
+      allow update: if isAdmin() && (
+        (resource.data.role == 'user' && request.resource.data.role == 'user' && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['active', 'displayName']))
+        || (request.auth.uid == uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['deviceBootstrapped'])));
+      allow delete: if false;
+    }
+
+    match /devices/{id} {
+      allow read: if signedIn() && (resource.data.uid == request.auth.uid || isAdmin());
+      // A new device starts as pending. Only the administrator's very first device is approved automatically.
+      allow create: if hasUser() && request.resource.data.uid == request.auth.uid
+        && id == request.auth.uid + '_' + request.resource.data.deviceId
+        && (request.resource.data.status == 'pending'
+            || (request.resource.data.status == 'approved' && isAdmin() && !('deviceBootstrapped' in userDoc())));
+      allow update: if isAdmin()
+        || (hasUser() && resource.data.uid == request.auth.uid && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lastSeen']));
+      allow delete: if false;
+    }
+
+    // Unique codes / sale references / frame numbers across devices.
+    match /refIndex/{key} {
+      allow read: if isStaff();
+      allow create: if isStaff() && request.resource.data.id is string && request.resource.data.col is string;
+      allow delete: if isAdmin();
+      allow update: if false;
+    }
+
+    // ---------- administrator-only data (buying prices, costs, profit inputs) ----------
+    match /batchCosts/{id}   { allow read: if isAdmin(); allow create: if isAdmin() && created(); allow update, delete: if false; }
+    match /bicycleCosts/{id} { allow read: if isAdmin(); allow create: if isAdmin() && created(); allow update: if isAdmin() && edited(); allow delete: if false; }
+    match /bicycleCostHistory/{id} { allow read: if isAdmin(); allow create: if isAdmin() && created(); allow update, delete: if false; }
+    match /purchases/{id}    { allow read: if isAdmin(); allow create: if isAdmin() && created(); allow update: if isAdmin() && edited(); allow delete: if false; }
+    match /priceHistory/{id} { allow read: if isAdmin(); allow create: if isAdmin() && created(); allow update, delete: if false; }
+    match /syncConflicts/{id} { allow read: if isAdmin(); allow create: if isAdmin() && request.resource.data.syncedAt == request.time; allow update: if isAdmin() && request.resource.data.syncedAt == request.time; allow delete: if false; }
+    match /activity/{id} {
+      allow read: if isAdmin();
+      allow create: if isStaff() && created() && (request.resource.data.uid == request.auth.uid || isAdmin());
+      allow update, delete: if false;
+    }
+    match /refunds/{id} {
+      allow read: if isAdmin();
+      allow create: if isAdmin() && created()
+        && request.resource.data.amount is number && request.resource.data.amount > 0
+        && validPaymentMethod(request.resource.data.method)
+        && request.resource.data.reservationId is string
+        && exists(docRef('reservations', request.resource.data.reservationId));
+      allow update, delete: if false;
+    }
+
+    // ---------- shop data ----------
+    match /products/{id}   { allow read: if isStaff(); allow create: if isAdmin() && created(); allow update: if isAdmin() && edited(); allow delete: if false; }
+    match /batchStock/{id} { allow read: if isStaff(); allow create: if isAdmin() && created(); allow update, delete: if false; }
+    match /adjustments/{id} { allow read: if isStaff(); allow create: if isAdmin() && created(); allow update, delete: if false; }
+    match /bicycles/{id}   { allow read: if isStaff(); allow create: if isAdmin() && created(); allow update: if isAdmin() && edited(); allow delete: if false; }
+    match /reservations/{id} { allow read: if isStaff(); allow create: if isAdmin() && created(); allow update: if isAdmin() && edited(); allow delete: if false; }
+    match /settings/{id}   { allow read: if isStaff(); allow create: if isAdmin() && created(); allow update: if isAdmin() && edited(); allow delete: if false; }
+
+    // ---------- sales ----------
+    match /sales/{id} {
+      allow read: if isStaff();
+      // A sale is created with its first line. Paid total is always bounded by total.
+      allow create: if isStaff() && created() && request.resource.data.id == id
+        && request.resource.data.status == 'completed'
+        && request.resource.data.total is number && request.resource.data.total >= 0
+        && request.resource.data.paidTotal is number && request.resource.data.paidTotal >= 0
+        && request.resource.data.paidTotal <= request.resource.data.total
+        && (request.resource.data.createdBy == request.auth.uid || isAdmin())
+        && existsAfter(docRef('saleLines', id + '_0'));
+      allow update: if isStaff() && edited() && (
+        isAdmin()
+        || (
+          resource.data.status == 'completed' && request.resource.data.status == 'cancelled'
+          && request.resource.data.cancel.reason is string && request.resource.data.cancel.reason.size() > 0
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'cancel', 'rev', 'syncedAt'])
+        )
+        || (
+          resource.data.status == 'completed' && request.resource.data.status == 'completed'
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['paidTotal', 'lastPaymentId', 'lastPaymentAmount', 'rev', 'syncedAt'])
+          && request.resource.data.lastPaymentId is string
+          && request.resource.data.lastPaymentAmount is number && request.resource.data.lastPaymentAmount > 0
+          && request.resource.data.paidTotal <= resource.data.get('total', -1)
+          && request.resource.data.paidTotal == resource.data.get('paidTotal', 0) + request.resource.data.lastPaymentAmount
+          && existsAfter(docRef('payments', request.resource.data.lastPaymentId))
+          && getAfter(docRef('payments', request.resource.data.lastPaymentId)).data.saleId == id
+          && getAfter(docRef('payments', request.resource.data.lastPaymentId)).data.amount == request.resource.data.lastPaymentAmount
+        )
+      );
+      allow delete: if false;
+    }
+
+    // Each line is validated against the current catalogue price and discount rules.
+    match /saleLines/{id} {
+      allow read: if isStaff();
+      allow create: if isStaff() && created()
+        && existsAfter(docRef('sales', request.resource.data.saleId))
+        && request.resource.data.qty is int && request.resource.data.qty > 0
+        && request.resource.data.discount is number && request.resource.data.discount >= 0
+        && priceOk(request.resource.data)
+        && (request.resource.data.discount == 0 || isAdmin() || discountOk(request.resource.data));
+      allow update, delete: if false;
+    }
+    function priceOk(l) {
+      return (l.kind == 'part' && get(docRef('products', l.productId)).data.sellPrice == l.unitPrice)
+          || (l.kind == 'bike' && l.qty == 1 && get(docRef('bicycles', l.bikeId)).data.sellPrice == l.unitPrice);
+    }
+    function discountOk(l) {
+      let s = get(docRef('settings', 'main')).data;
+      let gross = l.qty * l.unitPrice;
+      let pct = gross * s.discountPct / 100;
+      let fixed = s.discountFixed;
+      let allowed = s.get('discountRule', 'both') == 'either' ? (pct > fixed ? pct : fixed) : (pct < fixed ? pct : fixed);
+      return l.discount <= allowed && l.discount <= gross;
+    }
+
+    match /payments/{id} {
+      allow read: if isStaff();
+      allow create: if isStaff() && created() && request.resource.data.id == id
+        && !('by' in request.resource.data)
+        && request.resource.data.amount is number && request.resource.data.amount > 0
+        && validPaymentMethod(request.resource.data.method)
+        && request.resource.data.saleId is string
+        && existsAfter(docRef('sales', request.resource.data.saleId))
+        && (
+          // Initial payments are created atomically with a new sale.
+          !exists(docRef('sales', request.resource.data.saleId))
+            ? (getAfter(docRef('sales', request.resource.data.saleId)).data.paidTotal >= request.resource.data.amount
+              && getAfter(docRef('sales', request.resource.data.saleId)).data.paidTotal <= getAfter(docRef('sales', request.resource.data.saleId)).data.total)
+            // Additional payments require the matching atomic paidTotal increase.
+            : paymentMatchesSaleUpdate(request.resource.data.saleId, id, request.resource.data.amount)
+        );
+      allow update, delete: if false;
+    }
+
+    match /saleAudit/{id} {
+      allow read: if isStaff();
+      allow create: if isStaff() && created() && (request.resource.data.by == request.auth.uid || isAdmin());
+      allow update, delete: if false;
+    }
+
+    match /{document=**} { allow read, write: if false; }
+  }
+}
