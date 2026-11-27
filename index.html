@@ -7,8 +7,8 @@
 <style>
 :root{--bg:#f2f6f4;--card:#fff;--fg:#14231e;--mut:#5f7169;--line:#cfdad5;--acc:#0f5c6e;--in:#1f7a4d;--out:#b3392f;--hl:#e6f0ec;--onacc:#fff;color-scheme:light;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1815;--card:#17231f;--fg:#e6efeb;--mut:#93a8a0;--line:#2b3d37;--acc:#5cc2d6;--in:#5fcf93;--out:#f08a80;--hl:#1e2f29;--onacc:#0f1815;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#0f1815;--card:#17231f;--fg:#e6efeb;--mut:#93a8a0;--line:#2b3d37;--acc:#5cc2d6;--in:#5fcf93;--out:#f08a80;--hl:#1e2f29;--onacc:#0f1815;color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a0a0b;--card:#151516;--fg:#f4f4f5;--mut:#a1a1a6;--line:#2e2e32;--acc:#f4f4f5;--in:#4ade80;--out:#ff5c5c;--hl:#1f1f22;--onacc:#0a0a0b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0a0a0b;--card:#151516;--fg:#f4f4f5;--mut:#a1a1a6;--line:#2e2e32;--acc:#f4f4f5;--in:#4ade80;--out:#ff5c5c;--hl:#1f1f22;--onacc:#0a0a0b;color-scheme:dark}
 *{box-sizing:border-box}
 html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
@@ -16,8 +16,9 @@ main{max-width:920px;margin:0 auto;padding:14px}
 h1{font:700 21px Georgia,"Times New Roman",serif;margin:0}
 h2{font:700 16px Georgia,serif;margin:18px 0 8px}
 .top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
-.tabs{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
-.tabs button{flex:1;border:0;background:none;color:var(--fg);padding:10px 4px;min-height:44px;font:inherit;font-weight:600;cursor:pointer}
+.tabs{display:flex;border:1px solid var(--line);border-radius:8px;overflow-x:auto;background:var(--card)}
+.tabs button{flex:1 0 auto;border:0;background:none;color:var(--fg);padding:10px 12px;min-height:44px;font:inherit;font-weight:600;cursor:pointer}
+.tabs button.hot{color:var(--out)}
 .tabs button[aria-selected="true"]{background:var(--acc);color:var(--onacc)}
 .bar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:12px 0}
 button,input,select{font:inherit;color:var(--fg);touch-action:manipulation}
@@ -46,10 +47,15 @@ tfoot td{font-weight:700;border-top:2px solid var(--line);border-bottom:0}
 .empty{padding:22px;text-align:center;color:var(--mut)}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .go{cursor:pointer}
+input[type=number]{-moz-appearance:textfield;appearance:textfield}input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .sm{width:92px;text-align:right}
-.sg{position:absolute;left:0;right:0;top:100%;z-index:5;background:var(--card);border:1px solid var(--line);border-radius:7px;max-height:240px;overflow:auto;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+input[readonly]{background:var(--hl);color:var(--mut)}
+.plist{min-width:0;font-size:14px}.plist th,.plist td{padding:2px 6px;border-right:1px solid var(--line)}.plist tbody tr:nth-child(even){background:var(--hl)}.plist td.pname{white-space:normal;min-width:180px;font-weight:600}.plist input.sm{width:72px;padding:2px 5px;min-height:0;height:28px;font-size:13px}
+.sg{position:absolute;left:0;right:0;top:100%;z-index:5;background:var(--card);border:1px solid var(--line);border-radius:7px;max-height:60vh;overflow:auto;box-shadow:0 6px 18px rgba(0,0,0,.18)}
 .sg:empty{display:none}
-.sg button{display:flex;justify-content:space-between;gap:10px;width:100%;border:0;border-bottom:1px solid var(--line);background:none;padding:10px;text-align:left;cursor:pointer;color:var(--fg)}
+.sg button{display:flex;justify-content:space-between;gap:10px;width:100%;border:0;border-bottom:1px solid var(--line);background:none;padding:14px 12px;font-size:16px;text-align:left;cursor:pointer;color:var(--fg)}
+.sg .hint{padding:12px;color:var(--mut)}
+.big{font-size:18px;min-height:54px}
 .sg button:hover,.sg button:focus{background:var(--hl)}
 .bike{display:grid;grid-template-columns:auto 1fr auto;gap:8px 14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:8px}
 .bt{font:700 28px Georgia,serif;min-width:70px;text-align:center;border:2px solid var(--acc);border-radius:8px;padding:4px 8px;color:var(--acc)}
@@ -58,13 +64,22 @@ tfoot td{font-weight:700;border-top:2px solid var(--line);border-bottom:0}
 .bk{display:flex;gap:6px;flex-wrap:wrap}
 .foot{display:flex;gap:6px;flex-wrap:wrap;margin-top:18px}
 .note{color:var(--mut);font-size:13px}
+details.mon{background:var(--card);border:1px solid var(--line);border-radius:10px;margin:8px 0;padding:0 12px}.mon summary{display:flex;justify-content:space-between;gap:4px 12px;padding:12px 0;cursor:pointer;flex-wrap:wrap}.mon .bar{margin:0 0 8px}.mon .wrap{margin-bottom:12px}
+.alertbar{background:var(--hl);border:1px solid var(--out);color:var(--out);border-radius:10px;padding:10px 12px;margin-bottom:12px;cursor:pointer;font-weight:600}
+.sales{min-width:640px;font-size:14px}.sales th,.sales td{padding:7px 9px;border-right:1px solid var(--line)}.sales thead th{background:var(--card)}
+.sales td[data-label=Item],.sales td[data-label=Note]{max-width:220px;overflow:hidden;text-overflow:ellipsis}
+input[type=checkbox]{min-height:0;width:20px;height:20px;padding:0;flex:none}
+.dlbox{flex:1 1 100%}.dlbox summary{display:inline-flex;align-items:center;list-style:none;cursor:pointer}.dlbox summary::-webkit-details-marker{display:none}
+.dlrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin:10px 0}.dlrow label{display:flex;flex-direction:column;font-size:12px;color:var(--mut);gap:3px}
+.dlt{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--card);margin:8px 0}.dlt.off .chips{opacity:.45}
+.chips{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:8px}.chip{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--fg)}
 .locked #tabs,.locked #view,.locked .foot,.locked .note,.att .foot{display:none}
 @media (max-width:640px){
 main{padding:10px}h1{font-size:18px}
-.tabs button{font-size:14px;padding:10px 2px}
+.tabs button{font-size:13px;padding:10px 9px}
 .form{grid-template-columns:repeat(2,1fr)}.s2,.s3,.s4,.s5,.s6{grid-column:span 2}
 .stats{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}
-.bike{grid-template-columns:auto 1fr}.bk{grid-column:1/-1}
+.bike{grid-template-columns:auto 1fr}.bk{grid-column:1/-1}.btnc{grid-column:span 2}
 .stack{min-width:0}.stack thead{display:none}
 .stack tbody tr{display:block;margin:8px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
 .stack tbody tr:nth-child(even){background:var(--hl)}
@@ -78,6 +93,7 @@ main{padding:10px}h1{font-size:18px}
 .stack tfoot td{display:block;border:0;padding:0}
 .wrap:has(.stack){background:none;border:0}}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
 </head>
 <body>
 <main>
@@ -86,7 +102,7 @@ main{padding:10px}h1{font-size:18px}
   <div class="tabs" role="tablist" id="tabs"></div>
   <div id="view"></div>
   <div class="foot">
-    <button class="btn" id="csv">Download Excel (CSV)</button>
+    <details class="dlbox" id="dlbox"><summary class="btn">Download tables (Excel)</summary><div id="dlpanel"></div></details>
     <button class="btn" id="bk">Save backup</button>
     <button class="btn" id="rs">Restore backup</button>
     <input type="file" id="file" accept=".json" hidden>
@@ -95,12 +111,12 @@ main{padding:10px}h1{font-size:18px}
 </main>
 <script>
 (function(){
-var KEY="ll_ledger_v1",PKEY="ll_products_v1",BKEY="ll_bikes_v1",METHODS=["Cash","MTN Mobile Money","Airtel Money","Credit"];
-var S={entries:[],products:[],bikes:[],view:"day",date:ymd(new Date()),form:{type:"Sale",method:"Cash"},role:"admin",pickBike:null,bq:"",bf:"Available",editBike:null};
+var KEY="ll_ledger_v1",PKEY="ll_products_v1",BKEY="ll_bikes_v1",VKEY="ll_voided_v1",LBK="ll_lastbackup_v1",CCK="ll_close_v1",METHODS=["Cash","MTN Mobile Money","Airtel Money","Credit"];
+var S={entries:[],voided:[],products:[],bikes:[],view:"day",date:ymd(new Date()),form:{type:"Sale",method:"Cash"},role:"admin",pickBike:null,bq:"",pq:"",bf:"Available",editBike:null};
 function lsGet(k){try{var r=localStorage.getItem(k);return r?JSON.parse(r)||[]:[]}catch(e){return[]}}
 function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){alert("Could not save in this browser. Download a backup now.")}}
-function load(){S.entries=lsGet(KEY);S.products=lsGet(PKEY);S.bikes=lsGet(BKEY)}
-function save(){lsSet(KEY,S.entries)}function saveP(){lsSet(PKEY,S.products)}function saveB(){lsSet(BKEY,S.bikes)}
+function load(){S.voided=lsGet(VKEY);S.entries=lsGet(KEY);S.products=lsGet(PKEY);S.bikes=lsGet(BKEY)}
+function saveV(){lsSet(VKEY,S.voided)}function save(){lsSet(KEY,S.entries)}function saveP(){lsSet(PKEY,S.products)}function saveB(){lsSet(BKEY,S.bikes)}
 function cp(c,o){if(window.LLCloud&&o)window.LLCloud.put(c,o)}
 function cd(c,id){if(window.LLCloud)window.LLCloud.del(c,id)}
 var adm=function(){return S.role==="admin"};
@@ -110,12 +126,16 @@ function addDays(s,n){var d=pd(s);d.setDate(d.getDate()+n);return ymd(d)}
 function monday(s){var d=pd(s);d.setDate(d.getDate()-(d.getDay()+6)%7);return ymd(d)}
 function money(n){return Math.round(+n||0).toLocaleString("en-US")}
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function dfull(s){return pd(s).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short",year:"numeric"})}
 function dlabel(s){return pd(s).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"})}
 function opts(arr,sel){return arr.map(function(x){return '<option'+(x===sel?' selected':'')+'>'+x+'</option>'}).join("")}
 function prodOf(id){return S.products.find(function(x){return x.id===id})}
 function bikeOf(id){return S.bikes.find(function(x){return x.id===id})}
 function bikeDesc(b){return [b.brand,b.color,b.size].filter(Boolean).join(" ")}
 function bikeLabel(b){return "Bike "+b.tag+" · "+bikeDesc(b)}
+function norm(s){var x=String(s==null?"":s).toLowerCase();try{x=x.normalize("NFD").replace(/[\u0300-\u036f]/g,"")}catch(e){}try{return x.replace(/[^\p{L}\p{N}]+/gu," ").trim()}catch(e){return x.replace(/[^a-z0-9]+/g," ").trim()}}
+function match(text,q){var t=norm(q).split(" ").filter(Boolean),x=norm(text);if(!t.length)return true;return t.every(function(w){return x.indexOf(w)>-1})||x.replace(/ /g,"").indexOf(t.join(""))>-1}
+function score(text,q){var t=norm(q).split(" ").filter(Boolean),x=norm(text);return t.filter(function(w){return x.indexOf(w)>-1}).length}
 function bikeText(b){return [b.tag,b.brand,b.color,b.size,b.note].join(" ").toLowerCase()}
 function tot(e){return (+e.qty||0)*(+e.price||0)}
 function cst(e){if(e.type!=="Sale")return 0;var c=+e.cost||0;if(!c){var o=e.bikeId?bikeOf(e.bikeId):e.productId?prodOf(e.productId):null;c=o?+o.cost||0:0}return (+e.qty||0)*c}
@@ -128,6 +148,7 @@ function sum(list){
     if(e.type==="Sale"){r.sales+=t;r.cost+=cst(e);r.count++;if(!(cst(e)>0))r.costKnown=false;
       r.by[e.method]=(r.by[e.method]||0)+t;
       var k=(e.item||"").trim().toLowerCase();if(k){var o=r.top[k]||(r.top[k]={name:e.item.trim(),qty:0,amt:0});o.qty+=+e.qty||0;o.amt+=t}}
+    else if(e.type==="Payment")r.paid=(r.paid||0)+t;
     else r.exp+=t});
   r.profit=r.sales-r.cost;r.net=r.sales-r.exp;return r}
 function stats(r){
@@ -143,28 +164,50 @@ function extras(r){
   '<div><h2>Best-selling items</h2><div class="wrap"><table style="min-width:0"><thead><tr><th>Item</th><th class="n">Qty</th><th class="n">Amount</th></tr></thead><tbody>'+(top||'<tr><td colspan="3" class="empty">No sales yet</td></tr>')+'</tbody></table></div></div></div>'}
 
 function formHTML(){
-  var f=S.form,a=adm(),sale=f.type==="Sale",res=f.type==="Restock";
-  var ph=sale?"Search a product or bike tag":res?"Search a product":"e.g. Rent, transport";
+  var f=S.form,a=adm(),sale=f.type==="Sale",res=f.type==="Restock",pay=f.type==="Credit payment";
+  var ph=sale?"Search: tube 26 black front, or bike tag 020":res?"Search a product to restock":pay?"Customer name (pick from the list)":"e.g. Rent, transport";
   var L=function(c,t,x){return '<label class="'+c+'">'+t+x+'</label>'};
+  var one=a?"s1":"s2";
   var h='<form class="form" id="f" onsubmit="return false">';
-  if(a)h+=L("s1","Type",'<select id="ty">'+opts(["Sale","Restock","Expense"],f.type)+'</select>');
-  h+='<label class="'+(a?"s2":"s3")+'" style="position:relative">'+(sale||res?"Item":"Description")+'<div id="sg" class="sg"></div><input id="it" required autocomplete="off" placeholder="'+ph+'"></label>';
-  h+=L("s1","Qty",'<input id="q" type="number" min="0" step="any" value="1" inputmode="decimal">');
-  h+=L("s1",sale?"Selling price each":res?"Buying cost each":"Amount",'<input id="p" type="number" min="0" step="any" inputmode="decimal" required>');
+  h+='<label class="s6" style="position:relative">'+(sale||res?"Item (type any words of the name)":pay?"Customer":"Description")+'<div id="sg" class="sg"></div><input id="it" class="big" required autocomplete="off" placeholder="'+ph+'"></label>';
+  if(res)h+='<div class="s6 note prev" id="prev">Pick a product to see its current prices. Change a price only if it is different.</div>';
+  if(a)h+=L("s1","Type",'<select id="ty">'+opts(["Sale","Restock","Expense","Credit payment"],f.type)+'</select>');
+  h+=L(one,res||sale?"Qty":"Qty (optional)",'<input id="q" type="number" min="0" step="any" value="1" inputmode="decimal">');
+  h+=L(one,sale?"Selling price each":res?"Buying cost each":pay?"Amount paid":"Amount",'<input id="p" type="number" min="0" step="any" inputmode="decimal" required>');
+  if(res&&a)h+=L("s1","New selling price",'<input id="ps2" type="number" min="0" step="any" inputmode="decimal" placeholder="same">');
   if(sale&&a)h+=L("s1","Buying cost each",'<input id="c" type="number" min="0" step="any" inputmode="decimal">');
-  h+=L("s1","Paid with",sale?'<select id="m">'+opts(METHODS,f.method)+'</select>':'<select id="m2">'+opts(METHODS.slice(0,3),f.method)+'</select>');
-  h+=L(sale&&a?"s4":"s5","Note (customer name for credit)",'<input id="nt">');
-  return h+'<div style="align-self:end"><button class="btn pri" id="add" style="width:100%">Add entry</button></div></form>'}
+  h+=L(a?(sale||res?"s2":"s3"):"s2","Paid with",sale?'<select id="m">'+opts(METHODS,f.method)+'</select>':'<select id="m2">'+opts(METHODS.slice(0,3),f.method)+'</select>');
+  h+=L("s5","Note (customer name for credit)",'<input id="nt">');
+  return h+'<div class="btnc" style="align-self:end"><button class="btn pri" id="add" style="width:100%">Add entry</button></div></form>'}
 
+var CMETH=["Cash","MTN Mobile Money","Airtel Money"];
+function ccGet(){try{return JSON.parse(localStorage.getItem(CCK))||{}}catch(e){return{}}}
+function ccSet(o){try{localStorage.setItem(CCK,JSON.stringify(o))}catch(e){}}
+function closeExpected(list){var ex={};CMETH.forEach(function(m){ex[m]=0});var cr=0;
+  list.forEach(function(e){var t=tot(e);if(e.type==="Sale"&&e.method==="Credit"){cr+=t;return}if(!(e.method in ex))return;
+    if(e.type==="Sale"||e.type==="Payment")ex[e.method]+=t;else ex[e.method]-=t});return{ex:ex,credit:cr}}
+function diffTxt(d){return d===0?'<span class="in">Matches</span>':'<span class="'+(d<0?"out":"in")+'">'+(d>0?"+":"")+money(d)+(d<0?" short":" over")+'</span>'}
+function closeHTML(list){if(!adm())return "";var c=closeExpected(list),saved=ccGet()[S.date]||{};
+  var rows=CMETH.map(function(m,i){var v=saved[m],has=v!==undefined&&v!=="";
+    return '<tr><td>'+m+'</td><td class="n">'+money(c.ex[m])+'</td><td class="n"><input class="sm" id="cc'+i+'" data-cc="'+m+'" type="number" min="0" step="any" inputmode="decimal" value="'+(has?esc(v):"")+'" placeholder="count"></td><td class="n" id="ccd'+i+'">'+(has?diffTxt((+v||0)-c.ex[m]):"")+'</td></tr>'}).join("");
+  return '<details class="mon" id="closebox"'+(S.closeOpen?' open':'')+'><summary><b>Close the day: count the money</b><span>'+dlabel(S.date)+'</span></summary><div class="wrap"><table style="min-width:0"><thead><tr><th>Paid with</th><th class="n">Should have</th><th class="n">You counted</th><th class="n">Difference</th></tr></thead><tbody>'+rows+'</tbody></table></div><p class="note">Should have = sales and credit payments received, minus expenses and restocks paid that way, for this date. Credit sales today: '+money(c.credit)+' (not counted). Counts are kept on this device.</p></details>'}
+function earlierDays(){var a=adm(),days={};
+  S.entries.forEach(function(e){if(e.date===S.date||(!a&&e.type!=="Sale"))return;(days[e.date]||(days[e.date]=[])).push(e)});
+  var ds=Object.keys(days),before=ds.filter(function(d){return d<S.date}).sort().reverse(),after=ds.filter(function(d){return d>S.date}).sort();
+  var row=function(d){var r=sum(days[d]);return '<tr><td>'+dfull(d)+'</td><td class="n">'+r.count+'</td><td class="n in">'+money(r.sales)+'</td><td><button class="btn" data-open="'+d+'">Open</button></td></tr>'};
+  var h='<h2>Other days</h2><div class="bar"><label class="note" style="display:flex;align-items:center;gap:8px">Go to any date <input type="date" id="dt" value="'+S.date+'"></label></div>';
+  if(!before.length&&!after.length)return h+'<div class="wrap"><div class="empty">No other days recorded yet.</div></div>';
+  return h+'<div class="wrap"><table style="min-width:0"><thead><tr><th>Day</th><th class="n">Sales made</th><th class="n">Sales</th><th></th></tr></thead><tbody>'+before.slice(0,30).map(row).join("")+after.map(row).join("")+'</tbody></table></div>'+(before.length>30?'<p class="note">Showing the latest 30 earlier days. Use “Go to any date” or the History tab for older days.</p>':'')}
 function dayView(){
-  var list=S.entries.filter(function(e){return e.date===S.date&&(adm()||e.type==="Sale")}).sort(function(a,b){return a.id-b.id});
+  var list=S.entries.filter(function(e){return e.date===S.date&&(adm()||e.type==="Sale")}).sort(function(a,b){return b.id-a.id});
   var r=sum(list),a=adm();
-  var h='<div class="bar"><button class="btn" data-d="-1">‹ Prev</button><input type="date" id="dt" value="'+S.date+'"><button class="btn" data-d="1">Next ›</button><button class="btn" data-d="0">Today</button></div>';
-  h+=stats(r)+formHTML();
-  h+='<div class="wrap"><table class="stack"><thead><tr><th>Type</th><th>Item</th><th class="n">Qty</th><th class="n">Price</th><th class="n">Total</th><th>Paid with</th><th>Note</th><th></th></tr></thead><tbody>';
-  if(!list.length)h+='<tr><td colspan="8" class="empty">Nothing recorded for '+dlabel(S.date)+'. Add the first entry above.</td></tr>';
-  list.forEach(function(e){h+='<tr><td data-label="Type" class="'+(e.type==="Sale"?"in":"out")+'">'+e.type+'</td><td data-label="Item">'+esc(e.item)+'</td><td class="n" data-label="Qty">'+e.qty+'</td><td class="n" data-label="Price">'+money(e.price)+'</td><td class="n" data-label="Total">'+money(tot(e))+'</td><td data-label="Paid with">'+esc(e.method)+'</td><td data-label="Note">'+esc(e.note)+'</td><td>'+(a?'<button class="x" data-x="'+e.id+'" aria-label="Delete entry">✕</button>':'')+'</td></tr>'});
-  return h+'</tbody></table></div>'+extras(r)}
+  var today=ymd(new Date()),isT=S.date===today;
+  var h='<h2 style="margin:4px 0 10px">'+(isT?'Today · ':'Ledger · ')+dfull(S.date)+'</h2>'+(isT?'':'<div class="bar"><button class="btn pri" data-d="0">‹ Back to today</button></div>');
+  h+=stats(r)+alertBar()+bkBar()+formHTML()+closeHTML(list);
+  h+='<div class="wrap"><table class="sales"><thead><tr><th>Type</th><th>Item</th><th class="n">Qty</th><th class="n">Price</th><th class="n">Total</th><th>Paid with</th><th>Note</th>'+(a?'<th>By</th>':'')+'<th></th></tr></thead><tbody>';
+  if(!list.length)h+='<tr><td colspan="9" class="empty">Nothing recorded for '+dlabel(S.date)+'. Add the first entry above.</td></tr>';
+  list.forEach(function(e){h+='<tr><td data-label="Type" class="'+(e.type==="Sale"||e.type==="Payment"?"in":"out")+'">'+(e.type==="Payment"?"Credit payment":e.type)+'</td><td data-label="Item" title="'+esc(e.item)+'">'+esc(e.item)+'</td><td class="n" data-label="Qty">'+e.qty+'</td><td class="n" data-label="Price">'+money(e.price)+'</td><td class="n" data-label="Total">'+money(tot(e))+'</td><td data-label="Paid with">'+esc(e.method)+'</td><td data-label="Note" title="'+esc(e.note)+'">'+esc(e.note)+'</td>'+(a?'<td data-label="By">'+esc(e.by||"")+'</td>':'')+'<td>'+(a?'<button class="x" data-x="'+e.id+'" aria-label="Void entry" title="Void this entry">✕</button>':'')+'</td></tr>'});
+  return h+'</tbody></table></div>'+extras(r)+earlierDays()}
 
 function periodTable(days){
   var rows="",T={s:0,e:0,c:0};
@@ -185,7 +228,7 @@ function monthView(){
 
 function bikeCards(){
   var q=(S.bq||"").trim().toLowerCase(),a=adm();
-  var list=S.bikes.filter(function(b){return (S.bf==="All"||(S.bf==="Sold")===(b.status==="Sold"))&&(!q||bikeText(b).indexOf(q)>-1)})
+  var list=S.bikes.filter(function(b){return (S.bf==="All"||(S.bf==="Sold")===(b.status==="Sold"))&&(!q||match(bikeText(b),q))})
     .sort(function(x,y){return (String(y.tag).toLowerCase()===q)-(String(x.tag).toLowerCase()===q)||String(x.tag).localeCompare(String(y.tag),undefined,{numeric:true})});
   if(!list.length)return '<div class="empty">'+(S.bikes.length?'No bicycle matches. Try another tag or change the filter.':'No bicycles yet.'+(a?' Add the first one above.':''))+'</div>';
   return list.map(function(b){var sold=b.status==="Sold";
@@ -207,68 +250,165 @@ function saveBike(){
   b.tag=tag;b.brand=g("bb");b.color=g("bc");b.size=g("bs");b.sell=parseFloat(g("bp"))||0;b.cost=parseFloat(g("bco"))||0;b.note=g("bn");
   S.editBike=null;saveB();cp("bikes",b);render()}
 
-function productsView(){
-  var a=adm(),val=0,lowN=0;
-  var rows=S.products.slice().sort(function(x,y){return x.name.localeCompare(y.name)}).map(function(p){var st=stockOf(p.id),isLow=st<=(+p.low||0);if(isLow)lowN++;val+=Math.max(0,st)*(+p.cost||0);
-    var stk='<td class="n '+(isLow?"low":"")+'" data-label="In stock">'+st+'</td>';
+function productTable(){
+  var a=adm(),val=0,lowN=0,q=S.pq,cnt=S.products.filter(function(p){return !q||match(p.name,q)}).length;
+  S.products.forEach(function(p){if(stockOf(p.id)<=(+p.low||0))lowN++;val+=Math.max(0,stockOf(p.id))*(+p.cost||0)});
+  var rows=S.products.filter(function(p){return !q||match(p.name,q)}).sort(function(x,y){return x.name.localeCompare(y.name,undefined,{numeric:true})}).map(function(p){var st=stockOf(p.id),isLow=st<=(+p.low||0);
+    var stk='<td class="n '+(isLow?"low":"")+'" data-label="In stock">'+st+(st<=0?' · out':isLow?' · low':'')+'</td>';
     if(!a)return '<tr><td class="pname">'+esc(p.name)+'</td><td class="n" data-label="Selling price">'+money(p.sell)+'</td>'+stk+'</tr>';
-    var inp=function(f,l){return '<td class="n" data-label="'+l+'"><input class="sm" type="number" min="0" step="any" value="'+(+p[f]||0)+'" data-pf="'+f+'" data-pid="'+p.id+'"></td>'};
-    return '<tr><td class="pname">'+esc(p.name)+'</td>'+inp("sell","Selling price")+inp("cost","Buying cost")+inp("open","Opening stock")+inp("low","Warn at")+stk+'<td class="n" data-label="Stock value">'+money(Math.max(0,st)*(+p.cost||0))+'</td><td><button class="x" data-px="'+p.id+'" aria-label="Delete product">✕</button></td></tr>'}).join("");
-  var h=a?'<h2>Add a product</h2><form class="form" onsubmit="return false"><label class="s2">Name<input id="pn" placeholder="e.g. Tube 26 inch"></label><label>Selling price<input id="ps" type="number" min="0" step="any"></label><label>Buying cost<input id="pc" type="number" min="0" step="any"></label><label>Stock now<input id="po" type="number" min="0" step="any" value="0"></label><label>Warn at<input id="pl" type="number" min="0" step="any" value="2"></label><div class="s6"><button class="btn pri" id="padd">Add product</button></div></form>':'';
-  h+=(lowN?'<p class="low">'+lowN+' product(s) at or below the warning level.</p>':'');
-  h+='<div class="wrap"><table class="stack"><thead><tr><th>Product</th><th class="n">Selling price</th>'+(a?'<th class="n">Buying cost</th><th class="n">Opening stock</th><th class="n">Warn at</th>':'')+'<th class="n">In stock</th>'+(a?'<th class="n">Stock value</th><th></th>':'')+'</tr></thead><tbody>'+(rows||'<tr><td colspan="8" class="empty">No products yet.'+(a?' Add your first product above.':'')+'</td></tr>')+'</tbody>'+(a?'<tfoot><tr><td colspan="6">Value of stock at buying cost</td><td class="n">'+money(val)+'</td><td></td></tr></tfoot>':'')+'</table></div>';
-  return h+(a?'<p class="note">In stock = opening stock + restocks − sales. Record restocks in the Day tab with type Restock. Opening stock is for fixing the count when it is wrong.</p>':'')}
+    var ed=S.editP===p.id;var inp=function(f,l){if(!ed)return '<td class="n" data-label="'+l+'">'+money(p[f])+'</td>';return '<td class="n" data-label="'+l+'"><input class="sm" type="number" min="0" step="any" value="'+(+p[f]||0)+'" data-pf="'+f+'" data-pid="'+p.id+'"></td>'};
+    return '<tr><td class="pname">'+esc(p.name)+'</td>'+inp("sell","Selling price")+inp("cost","Buying cost")+inp("open","Opening stock")+inp("low","Warn at")+stk+'<td class="n" data-label="Stock value">'+money(Math.max(0,st)*(+p.cost||0))+'</td><td><button class="btn'+(ed?' pri':'')+'" data-pe="'+p.id+'">'+(ed?'Done':'Edit')+'</button> <button class="x" data-px="'+p.id+'" aria-label="Delete product">✕</button></td></tr>'}).join("");
+  return (q?'<p class="note">'+cnt+' of '+S.products.length+' products match.</p>':'')+(lowN?'<p class="low">'+lowN+' product(s) at or below the warning level.</p>':'')+'<div class="wrap"><table class="plist"><thead><tr><th>Product</th><th class="n">Selling price</th>'+(a?'<th class="n">Buying cost</th><th class="n">Opening stock</th><th class="n">Warn at</th>':'')+'<th class="n">In stock</th>'+(a?'<th class="n">Stock value</th><th></th>':'')+'</tr></thead><tbody>'+(rows||'<tr><td colspan="8" class="empty">'+(S.products.length?'No product matches. Try fewer words.':'No products yet.'+(a?' Add your first product above.':''))+'</td></tr>')+'</tbody>'+(a?'<tfoot><tr><td colspan="6">Value of all stock at buying cost</td><td class="n">'+money(val)+'</td><td></td></tr></tfoot>':'')+'</table></div>'}
+function productsView(){
+  var a=adm();
+  var h=a?'<h2>Add a product</h2><form class="form" onsubmit="return false"><label class="s2">Name (include size, color, position)<input id="pn" placeholder="e.g. Tube 26 black front"></label><label>Selling price<input id="ps" type="number" min="0" step="any"></label><label>Buying cost<input id="pc" type="number" min="0" step="any"></label><label>Stock now<input id="po" type="number" min="0" step="any" value="0"></label><label>Warn at<input id="pl" type="number" min="0" step="any" value="2"></label><div class="s6"><button class="btn pri" id="padd">Add product</button></div></form>':'';
+  h+='<h2>Find a product</h2><div class="bar"><input type="search" id="pq" class="big" value="'+esc(S.pq)+'" placeholder="Type any words, e.g. tube 26 black" autocomplete="off">'+(a?'<button class="btn" id="pdl">Download this list (Excel)</button>':'')+'</div>'+(a?'<p class="note" id="pdlmsg"></p>':'');
+  return h+'<div id="pres">'+productTable()+'</div>'+(a?'<p class="note">In stock = opening stock + restocks − sales. Record restocks in the Day tab with type Restock. Opening stock is for fixing the count when it is wrong.</p>':'')}
 function addProduct(){
   var g=function(i){return document.getElementById(i).value};var name=g("pn").trim();if(!name){document.getElementById("pn").focus();return}
   if(S.products.some(function(p){return p.name.toLowerCase()===name.toLowerCase()})){alert("This product is already in the list.");return}
   S.products.push({id:"p"+Date.now(),name:name,sell:parseFloat(g("ps"))||0,cost:parseFloat(g("pc"))||0,open:parseFloat(g("po"))||0,low:parseFloat(g("pl"))||0});saveP();cp("products",S.products[S.products.length-1]);render()}
 
-function fillProduct(id){var p=prodOf(id);if(!p)return;S.pickBike=null;var s=function(i,v){var x=document.getElementById(i);if(x)x.value=v};s("it",p.name);if(S.form.type==="Sale"){s("p",p.sell||"");s("c",p.cost||"")}else s("p",p.cost||"");var sg=document.getElementById("sg");if(sg)sg.innerHTML=""}
+function updPrev(){var el=document.getElementById("prev");if(!el)return;var p=S.rp?prodOf(S.rp):null;
+  var lk=!!(p&&S.rlock);["p","ps2"].forEach(function(i){var x=document.getElementById(i);if(x)x.readOnly=lk});
+  if(!p){el.textContent="Pick a product to see its current prices. Change a price only if it is different.";return}
+  var c=parseFloat((document.getElementById("p")||{}).value),n=parseFloat((document.getElementById("ps2")||{}).value),ch=[];
+  if(c>=0&&c!==(+p.cost||0))ch.push("buying cost "+money(p.cost)+" → "+money(c));
+  if(n>=0&&n!==(+p.sell||0))ch.push("selling price "+money(p.sell)+" → "+money(n));
+  var q9=parseFloat((document.getElementById("q")||{}).value),st9=stockOf(p.id),avg=(c>=0&&q9>0&&st9>0)?Math.round((st9*(+p.cost||0)+q9*c)/(st9+q9)):null;
+  el.innerHTML="Current: buying cost "+money(p.cost)+" · selling price "+money(p.sell)+" · "+st9+" in stock. "+(avg!==null&&avg!==(+p.cost||0)?"Average cost after this restock: "+money(avg)+". ":"")+(S.rlock?'<button type="button" class="btn" id="redit">Edit prices</button>':(ch.length?'<b class="low">Changing: '+ch.join(", ")+'</b>':"No price change."))}
+function fillProduct(id){var p=prodOf(id);if(!p)return;S.pickBike=null;S.rp=id;S.rlock=true;var s=function(i,v){var x=document.getElementById(i);if(x)x.value=v};s("it",p.name);if(S.form.type==="Sale"){s("p",p.sell||"");s("c",p.cost||"")}else{s("p",p.cost||"");s("ps2",p.sell||"")}var sg=document.getElementById("sg");if(sg)sg.innerHTML="";updPrev()}
 function fillBike(id){var b=bikeOf(id);if(!b)return;S.pickBike=id;var s=function(i,v){var x=document.getElementById(i);if(x)x.value=v};s("it",bikeLabel(b));s("q",1);s("p",b.sell||"");s("c",b.cost||"");var sg=document.getElementById("sg");if(sg)sg.innerHTML=""}
 function suggest(){
   var it=document.getElementById("it"),sg=document.getElementById("sg");if(!it||!sg)return;var t=S.form.type;if(t==="Expense"){sg.innerHTML="";return}
-  var q=it.value.trim().toLowerCase(),a=adm(),out=[];
-  if(t==="Sale")S.bikes.filter(function(b){return b.status!=="Sold"&&(!q||bikeText(b).indexOf(q)>-1)}).sort(function(x,y){return (String(y.tag).toLowerCase()===q)-(String(x.tag).toLowerCase()===q)||String(x.tag).localeCompare(String(y.tag),undefined,{numeric:true})}).slice(0,5).forEach(function(b){out.push('<button type="button" data-bike="'+b.id+'"><span>Bike '+esc(b.tag)+' · '+esc(bikeDesc(b))+'</span><span>'+money(b.sell)+'</span></button>')});
-  S.products.filter(function(p){return !q||p.name.toLowerCase().indexOf(q)>-1}).slice(0,6).forEach(function(p){out.push('<button type="button" data-pick="'+p.id+'"><span>'+esc(p.name)+'</span><span>'+money(t==="Sale"?p.sell:p.cost)+' · '+stockOf(p.id)+' in stock</span></button>')});
+  if(t==="Credit payment"){var dq=(it.value||"").trim(),dl2=debtorData().filter(function(d){return d.bal>0&&(!dq||match(d.name,dq))}).slice(0,8);
+    sg.innerHTML=dl2.length?dl2.map(function(d){return '<button type="button" data-debtor="'+esc(d.name)+'"><span>'+esc(d.name)+'</span><span class="out">owes '+money(d.bal)+'</span></button>'}).join(""):(dq?'<div class="hint">No customer owing with that name. It will be recorded as typed.</div>':'');return}
+  var q=it.value.trim(),ql=q.toLowerCase(),out=[];
+  if(t==="Sale")S.bikes.filter(function(b){return b.status!=="Sold"&&(!q||match(bikeText(b),q))}).sort(function(x,y){return (String(y.tag).toLowerCase()===ql)-(String(x.tag).toLowerCase()===ql)||String(x.tag).localeCompare(String(y.tag),undefined,{numeric:true})}).slice(0,6).forEach(function(b){out.push('<button type="button" data-bike="'+b.id+'"><span>Bike '+esc(b.tag)+' · '+esc(bikeDesc(b))+'</span><span>'+money(b.sell)+'</span></button>')});
+  var ps=S.products.filter(function(p){return !q||match(p.name,q)}).sort(function(x,y){return x.name.localeCompare(y.name,undefined,{numeric:true})});
+  ps.slice(0,12).forEach(function(p){var st=stockOf(p.id);out.push('<button type="button" data-pick="'+p.id+'"><span>'+esc(p.name)+'</span><span>'+money(t==="Sale"?p.sell:p.cost)+' · <span class="'+(st<=0?"out":"")+'">'+st+' in stock</span></span></button>')});
+  if(ps.length>12)out.push('<div class="hint">'+(ps.length-12)+' more. Type more words to narrow it down.</div>');
+  if(!out.length&&q)out.push('<div class="hint">No match. It will be recorded as typed.</div>');
   sg.innerHTML=out.join("")}
 function add(){
   var g=function(i){var x=document.getElementById(i);return x?x.value:""};
-  var type=adm()?S.form.type:"Sale",sale=type==="Sale";
+  var type=adm()?S.form.type:"Sale";if(type==="Credit payment")type="Payment";var sale=type==="Sale";
   var item=g("it").trim(),price=parseFloat(g("p")),qty=parseFloat(g("q"));
   if(!item){document.getElementById("it").focus();return}
   if(!(price>=0)){document.getElementById("p").focus();return}
+  if((type==="Expense"||type==="Payment")&&!(qty>0))qty=1;
   if(!(qty>0)){document.getElementById("q").focus();return}
   var method=sale?g("m"):g("m2"),note=g("nt").trim();
   if(sale&&method==="Credit"&&!note){alert("Enter the customer’s name in the note for a credit sale.");document.getElementById("nt").focus();return}
   var b=S.pickBike?bikeOf(S.pickBike):null;if(!(b&&sale&&b.status!=="Sold"&&item===bikeLabel(b)))b=null;
   if(b)qty=1;
   var pid=b?"":(S.products.find(function(x){return x.name.toLowerCase()===item.toLowerCase()})||{}).id||"";
+  if(!pid&&!b&&type==="Restock"){var cand=S.products.filter(function(x){return match(x.name,item)});
+    if(cand.length===1){pid=cand[0].id;item=cand[0].name}
+    else{var sg0=document.getElementById("sg");if(sg0)sg0.innerHTML='<div class="hint low">'+(cand.length?cand.length+' products match. Tap the right one in this list, then press Add entry.':'No product with that name. Add it under Products first, then restock it.')+'</div>';
+      if(cand.length)suggest();return}}
   if(pid&&sale&&qty>stockOf(pid)&&!confirm("Only "+stockOf(pid)+" in stock. Record the sale anyway?"))return;
-  if(pid&&type==="Restock"){var pp=prodOf(pid);if(pp){pp.cost=price;saveP();cp("products",pp)}}
-  var en={id:Date.now(),date:S.date,type:type,item:item,productId:pid,bikeId:b?b.id:"",qty:qty,price:price,cost:sale&&adm()?(parseFloat(g("c"))||0):0,method:method,note:note};
+  var newSell=null;
+  if(pid&&type==="Restock"){var pp=prodOf(pid);if(pp){var stB=stockOf(pid);pp.cost=stB>0?Math.round((stB*(+pp.cost||0)+qty*price)/(stB+qty)):price;var ns=parseFloat(g("ps2"));if(ns>=0&&g("ps2")!==""&&ns!==(+pp.sell||0)){pp.sell=ns;newSell=ns}saveP();cp("products",pp)}}
+  var en={id:Date.now(),by:window.LLWho||(adm()?"Admin":""),date:S.date,type:type,item:item,productId:pid,bikeId:b?b.id:"",qty:qty,price:price,cost:sale&&adm()?(parseFloat(g("c"))||0):0,method:method,note:note};
   S.entries.push(en);cp("entries",en);
   if(b){b.status="Sold";b.soldDate=S.date;b.saleId=en.id;saveB();cp("bikes",b)}
+  var p2=pid?prodOf(pid):null;
+  if(type==="Restock"&&p2)S.flash="Restocked "+p2.name+": +"+qty+", now "+stockOf(pid)+" in stock. Average buying cost is now "+money(p2.cost)+"."+(newSell!==null?" Selling price is now "+money(newSell)+".":"");
+  if(sale&&p2){var s2=stockOf(pid);if(s2<=(+p2.low||0))S.flash="⚠ "+p2.name+": "+(s2<=0?"out of stock":"only "+s2+" left")+" (warn at "+(+p2.low||0)+")."}
+  else if(sale&&!b&&!pid&&S.products.length)S.flash="“"+item+"” is not in your product list, so no stock was reduced. Add it under Products, or link it later in Alerts."
   S.pickBike=null;S.form.method=method;save();render();
   var f=document.getElementById("it");if(f)f.focus()}
 
-var NAMES={day:"Day",week:"Week",month:"Month",bikes:"Bikes",products:"Products"};
-function allowed(){return adm()?["day","week","month","bikes","products"]:["day","bikes","products"]}
+function debtorData(){var m={};
+  S.entries.forEach(function(e){if(e.type==="Sale"&&e.method==="Credit"){var n=(e.note||"").trim();if(!n)return;var k=norm(n),o=m[k]||(m[k]={name:n,owed:0,paid:0,last:""});o.owed+=tot(e);if(e.date>o.last)o.last=e.date}});
+  S.entries.forEach(function(e){if(e.type==="Payment"){var k=norm(e.item),o=m[k]||(m[k]={name:(e.item||"").trim(),owed:0,paid:0,last:""});o.paid+=tot(e)}});
+  return Object.keys(m).map(function(k){var o=m[k];o.bal=o.owed-o.paid;return o}).sort(function(a,b){return b.bal-a.bal})}
+function debtorHist(d){var k=norm(d.name),bal=0,ed=S.editPay;
+  var list=S.entries.filter(function(e){return (e.type==="Sale"&&e.method==="Credit"&&norm(e.note)===k)||(e.type==="Payment"&&norm(e.item)===k)}).sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:a.id-b.id});
+  var rows=list.map(function(e){var pay=e.type==="Payment",t=tot(e);bal+=pay?-t:t;var editing=pay&&String(ed)===String(e.id);
+    var det=pay?"Payment received":"Credit sale: "+esc(e.item)+(+e.qty!==1?" ×"+e.qty:"");
+    var amt=editing?'<input class="sm" type="number" min="0" step="any" inputmode="decimal" data-pf2="price" data-pid2="'+e.id+'" value="'+(+e.price||0)+'">':(pay?"−":"+")+money(t);
+    var dt=editing?'<input type="date" data-pf2="date" data-pid2="'+e.id+'" value="'+esc(e.date)+'">':dlabel(e.date);
+    var act=pay?'<button class="btn'+(editing?' pri':'')+'" data-pe2="'+e.id+'">'+(editing?"Done":"Edit")+'</button> <button class="x" data-x="'+e.id+'" aria-label="Void payment" title="Void this payment">✕</button>':"";
+    return '<tr><td>'+dt+'</td><td>'+det+'</td><td class="n '+(pay?"in":"")+'">'+amt+'</td><td class="n"><b>'+money(bal)+'</b></td><td>'+esc(e.by||"")+'</td><td>'+act+'</td></tr>'}).join("");
+  return '<tr class="hist"><td colspan="6"><div class="wrap" style="margin:4px 0"><table style="min-width:520px;font-size:14px"><thead><tr><th>Date</th><th>What</th><th class="n">Amount</th><th class="n">Balance</th><th>By</th><th></th></tr></thead><tbody>'+(rows||'<tr><td colspan="6" class="empty">Nothing recorded</td></tr>')+'</tbody></table></div></td></tr>'}
+function debtorsView(){var all=debtorData(),owing=all.filter(function(d){return d.bal>0}),total=owing.reduce(function(n,d){return n+d.bal},0);
+  var list=S.showSettled?all:owing;
+  var h='<h2>Customers who owe money</h2><p class="note">Built from credit sales. A credit sale needs the customer’s name in the note. When a customer pays, even a part, press Record payment. Press History to see every credit and payment, and to correct a payment.</p>';
+  h+='<div class="bar"><button class="btn'+(S.showSettled?' pri':'')+'" id="dset">'+(S.showSettled?'Showing all customers':'Show customers who have paid up')+'</button></div>';
+  if(!list.length)return h+'<div class="wrap"><div class="empty">Nobody owes anything right now.</div></div>';
+  h+='<div class="wrap"><table style="min-width:560px"><thead><tr><th>Customer</th><th class="n">Credit taken</th><th class="n">Paid</th><th class="n">Still owes</th><th>Last credit</th><th></th></tr></thead><tbody>'+list.map(function(d){var k=norm(d.name),open=S.openD===k;
+    return '<tr><td>'+esc(d.name)+'</td><td class="n">'+money(d.owed)+'</td><td class="n">'+money(d.paid)+'</td><td class="n '+(d.bal>0?"out":d.bal<0?"low":"in")+'"><b>'+(d.bal>0?money(d.bal):d.bal<0?"overpaid "+money(-d.bal):"Paid up")+'</b></td><td>'+(d.last?dlabel(d.last):"")+'</td><td style="white-space:nowrap"><button class="btn" data-pay="'+esc(d.name)+'">Record payment</button> <button class="btn'+(open?' pri':'')+'" data-dh="'+esc(k)+'">'+(open?"Hide":"History")+'</button></td></tr>'+(open?debtorHist(d):"")}).join("")+'</tbody><tfoot><tr><td colspan="3">Total owed to the shop</td><td class="n out">'+money(total)+'</td><td colspan="2"></td></tr></tfoot></table></div>';
+  return h}
+function alertData(){
+  var low=[],out=[],unl=[];
+  S.products.forEach(function(p){var st=stockOf(p.id);if(st<=0)out.push({p:p,st:st});else if(st<=(+p.low||0))low.push({p:p,st:st})});
+  if(adm())S.entries.forEach(function(e){if((e.type==="Sale"||e.type==="Restock")&&!e.productId&&!e.bikeId)unl.push(e)});
+  return{low:low,out:out,unl:unl}}
+function alertCount(){var d=alertData();return d.low.length+d.out.length}
+function bkBar(){if(!adm()||!S.entries.length)return "";var last="";try{last=localStorage.getItem(LBK)||""}catch(e){}
+  var days=last?Math.floor((pd(ymd(new Date()))-pd(last))/864e5):null;if(days!==null&&days<7)return "";
+  return '<div class="alertbar" id="bkbar">⚠ '+(days===null?'No backup saved yet.':'Last backup was '+days+' days ago.')+' Tap here to save one now.</div>'}
+function markBk(){try{localStorage.setItem(LBK,ymd(new Date()))}catch(e){}}
+function alertBar(){var n=alertCount(),fl=S.flash;S.flash="";
+  return (fl?'<div class="alertbar" data-goalerts="1">'+esc(fl)+'</div>':'')+(n?'<div class="alertbar" data-goalerts="1">⚠ '+n+' product'+(n>1?'s':'')+' low or out of stock. Tap to see.</div>':'')}
+function alertsView(){
+  var d=alertData(),a=adm();
+  var row=function(x,lab){return '<tr><td>'+esc(x.p.name)+'</td><td class="n low">'+x.st+'</td><td class="n">'+(+x.p.low||0)+'</td><td class="low">'+lab+'</td></tr>'};
+  var h='<h2>Stock alerts</h2>';
+  h+=(d.out.length||d.low.length)?'<div class="wrap"><table style="min-width:0"><thead><tr><th>Product</th><th class="n">In stock</th><th class="n">Warn at</th><th>Status</th></tr></thead><tbody>'+d.out.map(function(x){return row(x,"Out of stock")}).join("")+d.low.map(function(x){return row(x,"Low")}).join("")+'</tbody></table></div>':'<div class="wrap"><div class="empty">No stock alerts. Every product is above its warning level.</div></div>';
+  h+='<p class="note">An alert shows when a product’s stock is at or below its “Warn at” number on the Products tab. Stock only goes down for sales linked to a product from your list.</p>';
+  if(a){h+='<h2>Sales and restocks not linked to a product ('+d.unl.length+')</h2>';
+    if(!d.unl.length)h+='<div class="wrap"><div class="empty">None. Every sale and restock is linked.</div></div>';
+    else h+='<p class="note">These entries did not change any stock. Pick the product to link each one and fix the count.</p><div class="wrap"><table style="min-width:0"><thead><tr><th>Date</th><th>Type</th><th>Item typed</th><th class="n">Qty</th><th>Link to product</th></tr></thead><tbody>'+d.unl.slice(-50).reverse().map(function(e){
+      var ps=S.products.slice().sort(function(x,y){return (score(y.name,e.item)-score(x.name,e.item))||x.name.localeCompare(y.name,undefined,{numeric:true})});
+      return '<tr><td>'+esc(e.date)+'</td><td>'+e.type+'</td><td>'+esc(e.item)+'</td><td class="n">'+e.qty+'</td><td><select data-lk="'+e.id+'"><option value="">Choose…</option>'+ps.map(function(p,i){return '<option value="'+p.id+'">'+(i===0&&score(p.name,e.item)>0?"★ ":"")+esc(p.name)+'</option>'}).join("")+'</select></td></tr>'}).join("")+'</tbody></table></div>'}
+  return h}
+function voidedHTML(){
+  return !(adm()&&S.voided.length)?'':'<h2>Voided entries ('+S.voided.length+')</h2><p class="note">These are not counted in any total or in stock. Press Restore to bring one back.</p><div class="wrap"><table style="min-width:640px"><thead><tr><th>Date</th><th>Type</th><th>Item</th><th class="n">Qty</th><th class="n">Total</th><th>Voided</th><th></th></tr></thead><tbody>'+S.voided.slice().sort(function(a,b){return String(b.voidDate||"").localeCompare(String(a.voidDate||""))||b.id-a.id}).map(function(e){return '<tr><td>'+esc(e.date)+'</td><td>'+(e.type==="Payment"?"Credit payment":esc(e.type))+'</td><td>'+esc(e.item)+'</td><td class="n">'+esc(e.qty)+'</td><td class="n">'+money(tot(e))+'</td><td>'+esc(e.voidDate||"")+(e.voidBy?' · '+esc(e.voidBy):'')+'</td><td><button class="btn" data-vr="'+e.id+'">Restore</button></td></tr>'}).join("")+'</tbody></table></div>'}
+function archiveView(){
+  var days={};S.entries.forEach(function(e){(days[e.date]||(days[e.date]=[])).push(e)});
+  var dates=Object.keys(days).sort().reverse();
+  if(!dates.length)return '<h2>History</h2><div class="wrap"><div class="empty">No days recorded yet. Each day you record appears here with its totals.</div></div>'+voidedHTML();
+  var yrs={};dates.forEach(function(d){var y=d.slice(0,4),m=d.slice(0,7);if(!yrs[y])yrs[y]={};if(!yrs[y][m])yrs[y][m]=[];yrs[y][m].push(d)});
+  var cur=ymd(new Date()).slice(0,7);
+  var h='<h2>History</h2><p class="note">Every day you record is kept under its own date. Open a day to see or correct it, or download it. Downloads use the tables and columns ticked in “Download tables”; month and year files also include Daily totals.</p><p class="note" id="armsg"></p>';
+  Object.keys(yrs).sort().reverse().forEach(function(y){
+    var ys=sum(S.entries.filter(function(e){return e.date.slice(0,4)===y}));
+    h+='<div class="bar"><b style="font:700 18px Georgia,serif">'+y+'</b><span class="note">Sales '+money(ys.sales)+' · Expenses '+money(ys.exp)+' · Net '+money(ys.net)+'</span><button class="btn" data-ay="'+y+'">Download '+y+'</button></div>';
+    Object.keys(yrs[y]).sort().reverse().forEach(function(m){
+      var ms=sum(S.entries.filter(function(e){return e.date.slice(0,7)===m})),name=pd(m+"-01").toLocaleDateString("en-GB",{month:"long",year:"numeric"});
+      h+='<details class="mon"'+(m===cur?' open':'')+'><summary><b>'+name+'</b><span>Sales '+money(ms.sales)+' · Net '+money(ms.net)+'</span></summary><div class="bar"><button class="btn" data-am="'+m+'">Download '+name+'</button></div><div class="wrap"><table style="min-width:0"><thead><tr><th>Day</th><th class="n">Sales made</th><th class="n">Sales</th><th class="n">Expenses</th><th class="n">Net</th><th></th></tr></thead><tbody>'+
+      yrs[y][m].map(function(d){var r=sum(days[d]);return '<tr><td>'+dfull(d)+'</td><td class="n">'+r.count+'</td><td class="n in">'+money(r.sales)+'</td><td class="n out">'+money(r.exp)+'</td><td class="n">'+money(r.net)+'</td><td style="white-space:nowrap"><button class="btn" data-open="'+d+'">Open</button> <button class="btn" data-ad="'+d+'">Download</button></td></tr>'}).join("")+'</tbody></table></div></details>'})});
+  h+=voidedHTML();
+  return h}
+var NAMES={day:"Day",week:"Week",month:"Month",history:"History",bikes:"Bikes",products:"Products",debtors:"Debtors",alerts:"Alerts"};
+function allowed(){return adm()?["day","week","month","history","bikes","products","debtors","alerts"]:["day","bikes","products","alerts"]}
 function render(){
   if(allowed().indexOf(S.view)<0)S.view="day";
   document.body.classList.toggle("att",!adm());
-  document.getElementById("tabs").innerHTML=allowed().map(function(v){return '<button role="tab" data-v="'+v+'" aria-selected="'+(v===S.view)+'">'+NAMES[v]+'</button>'}).join("");
-  document.getElementById("view").innerHTML=S.view==="day"?dayView():S.view==="week"?weekView():S.view==="month"?monthView():S.view==="bikes"?bikesView():productsView()}
+  var ac=alertCount();document.getElementById("tabs").innerHTML=allowed().map(function(v){return '<button role="tab" data-v="'+v+'" class="'+(v==="alerts"&&ac?"hot":"")+'" aria-selected="'+(v===S.view)+'">'+NAMES[v]+(v==="alerts"&&ac?" ("+ac+")":"")+'</button>'}).join("");
+  document.getElementById("view").innerHTML=S.view==="day"?dayView():S.view==="week"?weekView():S.view==="month"?monthView():S.view==="bikes"?bikesView():S.view==="alerts"?alertsView():S.view==="history"?archiveView():S.view==="debtors"?debtorsView():productsView()}
 function setRole(r){S.role=r==="attendant"?"attendant":"admin";if(S.role!=="admin")S.form.type="Sale";render()}
 
-document.getElementById("tabs").addEventListener("click",function(e){var v=e.target.dataset.v;if(v){S.view=v;render()}});
+document.getElementById("tabs").addEventListener("click",function(e){var v=e.target.dataset.v;if(v){S.view=v;S.editP=null;render()}});
 var vw=document.getElementById("view");
 vw.addEventListener("click",function(e){
   var t=e.target,row=t.closest("[data-go]");
   if(t.dataset.d!==undefined){var n=+t.dataset.d;S.date=n===0?ymd(new Date()):addDays(S.date,n);render();return}
   if(t.dataset.m!==undefined){var n2=+t.dataset.m;if(n2===0)S.date=ymd(new Date());else{var d=pd(S.date);d.setDate(1);d.setMonth(d.getMonth()+n2);S.date=ymd(d)}render();return}
   if(t.dataset.x){if(!adm())return;var id=t.dataset.x,en=S.entries.find(function(x){return String(x.id)===id});
-    if(en&&confirm("Delete this entry?")){if(en.bikeId){var bb=bikeOf(en.bikeId);if(bb&&String(bb.saleId)===id){bb.status="Available";bb.soldDate="";bb.saleId="";saveB();cp("bikes",bb)}}
-      cd("entries",id);S.entries=S.entries.filter(function(x){return String(x.id)!==id});save();render()}return}
+    if(en&&confirm("Void this entry? It is taken out of totals and stock, but kept under Voided entries in History so you can restore it.")){if(en.bikeId){var bb=bikeOf(en.bikeId);if(bb&&String(bb.saleId)===id){bb.status="Available";bb.soldDate="";bb.saleId="";saveB();cp("bikes",bb)}}
+      en.void=1;en.voidDate=ymd(new Date());en.voidBy=window.LLWho||"Admin";cp("entries",en);S.voided.push(en);S.entries=S.entries.filter(function(x){return String(x.id)!==id});save();saveV();render()}return}
+  if(t.dataset.vr){var vid=t.dataset.vr,ve=S.voided.find(function(x){return String(x.id)===vid});if(ve){delete ve.void;delete ve.voidDate;delete ve.voidBy;
+      if(ve.bikeId){var vb=bikeOf(ve.bikeId);if(vb&&vb.status!=="Sold"){vb.status="Sold";vb.soldDate=ve.date;vb.saleId=ve.id;saveB();cp("bikes",vb)}}
+      cp("entries",ve);S.voided=S.voided.filter(function(x){return x!==ve});S.entries.push(ve);save();saveV();render()}return}
+  var db=t.closest("[data-debtor]");if(db){var dn=db.dataset.debtor,dd0=debtorData().find(function(x){return x.name===dn});var ix=document.getElementById("it");if(ix)ix.value=dn;var px=document.getElementById("p");if(px){px.value="";px.placeholder=dd0?"owes "+money(dd0.bal):"";px.focus()}var sg1=document.getElementById("sg");if(sg1)sg1.innerHTML="";return}
+  if(t.id==="dset"){S.showSettled=!S.showSettled;render();return}
+  if(t.dataset.dh){S.openD=S.openD===t.dataset.dh?null:t.dataset.dh;S.editPay=null;render();return}
+  if(t.dataset.pe2){S.editPay=String(S.editPay)===t.dataset.pe2?null:t.dataset.pe2;render();return}
+  if(t.dataset.pay){S.view="day";S.form.type="Credit payment";S.date=ymd(new Date());render();var ix2=document.getElementById("it"),dn2=t.dataset.pay,dd2=debtorData().find(function(x){return x.name===dn2});if(ix2)ix2.value=dn2;var px2=document.getElementById("p");if(px2){px2.value="";px2.placeholder=dd2?"owes "+money(dd2.bal):"";px2.focus()}scrollTo(0,0);return}
   var bk=t.closest("[data-bike]");if(bk){fillBike(bk.dataset.bike);var q1=document.getElementById("p");if(q1)q1.focus();return}
   var pk=t.closest("[data-pick]");if(pk){fillProduct(pk.dataset.pick);var q0=document.getElementById("q");if(q0){q0.focus();q0.select()}return}
   if(t.dataset.sell){S.view="day";S.form.type="Sale";S.date=ymd(new Date());render();fillBike(t.dataset.sell);scrollTo(0,0);return}
@@ -276,14 +416,37 @@ vw.addEventListener("click",function(e){
   if(t.dataset.bx){var b2=bikeOf(t.dataset.bx);if(b2&&confirm("Remove bicycle "+b2.tag+" from the list?")){cd("bikes",b2.id);S.bikes=S.bikes.filter(function(x){return x.id!==b2.id});saveB();render()}return}
   if(t.id==="badd"){saveBike();return}
   if(t.id==="bcancel"){S.editBike=null;render();return}
+  if(t.closest("[data-goalerts]")){S.view="alerts";render();return}
+  if(t.dataset.open){S.date=t.dataset.open;S.view="day";render();scrollTo(0,0);return}
+  if(t.dataset.ad||t.dataset.am||t.dataset.ay){var k=t.dataset.ad||t.dataset.am||t.dataset.ay,rg,ex;
+    if(t.dataset.ad)rg=[k,k];else if(t.dataset.am){var d0=pd(k+"-01");rg=[k+"-01",ymd(new Date(d0.getFullYear(),d0.getMonth()+1,0))];ex=["daily"]}else{rg=[k+"-01-01",k+"-12-31"];ex=["daily"]}
+    var am=document.getElementById("armsg");am.textContent="";runDl(undefined,undefined,rg,k,ex).then(function(r){am.textContent=r});return}
+  if(t.id==="pdl"){var pm=document.getElementById("pdlmsg");pm.textContent="";runDl("products",S.pq).then(function(r){pm.textContent=r});return}
   if(t.id==="padd"){addProduct();return}
+  if(t.id==="bkbar"){document.getElementById("bk").click();return}
+  if(t.dataset.pe){S.editP=S.editP===t.dataset.pe?null:t.dataset.pe;render();return}
+  if(t.id==="redit"){S.rlock=false;updPrev();var p9=document.getElementById("p");if(p9)p9.focus();return}
+
   if(t.dataset.px){if(confirm("Delete this product? Past entries keep their item names.")){cd("products",t.dataset.px);S.products=S.products.filter(function(p){return p.id!==t.dataset.px});saveP();render()}return}
   if(t.id==="add"){add();return}
   if(row){S.date=row.dataset.go;S.view="day";render()}});
 vw.addEventListener("input",function(e){
   var id=e.target.id;
-  if(id==="it"){S.pickBike=S.pickBike&&bikeOf(S.pickBike)&&e.target.value===bikeLabel(bikeOf(S.pickBike))?S.pickBike:null;suggest()}
+  if(e.target.dataset&&e.target.dataset.cc){var cm=e.target.dataset.cc,all=ccGet(),dd=all[S.date]||{};dd[cm]=e.target.value;all[S.date]=dd;ccSet(all);
+    var ex=closeExpected(S.entries.filter(function(x){return x.date===S.date})).ex,i9=CMETH.indexOf(cm),cell=document.getElementById("ccd"+i9);
+    if(cell)cell.innerHTML=e.target.value===""?"":diffTxt((+e.target.value||0)-ex[cm])}
+  if(id==="p"||id==="ps2"||id==="q")updPrev();
+  if(id==="it"){var rp0=S.rp?prodOf(S.rp):null;if(rp0&&rp0.name!==e.target.value){S.rp=null;S.rlock=false;updPrev()}S.pickBike=S.pickBike&&bikeOf(S.pickBike)&&e.target.value===bikeLabel(bikeOf(S.pickBike))?S.pickBike:null;suggest()}
+  if(id==="pq"){S.pq=e.target.value;var pr=document.getElementById("pres");if(pr)pr.innerHTML=productTable()}
   if(id==="bq"){S.bq=e.target.value;var r=document.getElementById("bres");if(r)r.innerHTML=bikeCards()}});
+addEventListener("wheel",function(){var a=document.activeElement;if(a&&a.type==="number")a.blur()},{passive:true});
+addEventListener("keydown",function(e){var a=e.target;if(a&&a.type==="number"&&(e.key==="ArrowUp"||e.key==="ArrowDown"))e.preventDefault()});
+vw.addEventListener("change",function(e){var t=e.target;if(!t.dataset||!t.dataset.pf2)return;
+  var en=S.entries.find(function(x){return String(x.id)===t.dataset.pid2});if(!en||en.type!=="Payment")return;
+  if(t.dataset.pf2==="price"){var v=parseFloat(t.value);if(!(v>=0)){t.value=+en.price||0;return}en.price=v}
+  else if(t.value)en.date=t.value;
+  cp("entries",en);save()});
+vw.addEventListener("toggle",function(e){if(e.target.id==="closebox")S.closeOpen=e.target.open},true);
 vw.addEventListener("focusin",function(e){if(e.target.id==="it")suggest()});
 vw.addEventListener("change",function(e){
   var t=e.target;
@@ -291,27 +454,72 @@ vw.addEventListener("change",function(e){
   if(t.id==="mo"&&t.value){S.date=t.value+"-01";render()}
   if(t.id==="ty"){S.form.type=t.value;S.pickBike=null;render()}
   if(t.id==="m"||t.id==="m2")S.form.method=t.value;
+  if(t.dataset.lk&&t.value){var le=S.entries.find(function(x){return String(x.id)===t.dataset.lk});if(le){le.productId=t.value;save();cp("entries",le);render()}}
   if(t.id==="bf"){S.bf=t.value;var r=document.getElementById("bres");if(r)r.innerHTML=bikeCards()}
-  if(t.dataset.pf){var pp=prodOf(t.dataset.pid);if(pp){pp[t.dataset.pf]=parseFloat(t.value)||0;saveP();cp("products",pp);render()}}});
+  if(t.dataset.pf){var pp=prodOf(t.dataset.pid);if(pp){pp[t.dataset.pf]=parseFloat(t.value)||0;saveP();cp("products",pp);if(!S.editP)render()}}});
 document.addEventListener("click",function(e){if(!e.target.closest("#sg")&&e.target.id!=="it"){var sg=document.getElementById("sg");if(sg)sg.innerHTML=""}});
 
-document.getElementById("csv").onclick=function(){
-  var q=function(v){return '"'+String(v==null?"":v).replace(/"/g,'""')+'"'};
-  var rows=[["Date","Type","Item","Qty","Price each","Total","Cost each","Paid with","Note"]];
-  S.entries.slice().sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:a.id-b.id}).forEach(function(e){rows.push([e.date,e.type,e.item,e.qty,e.price,tot(e),e.cost||"",e.method,e.note])});
-  dl("\ufeff"+rows.map(function(r){return r.map(q).join(",")}).join("\r\n"),"ledger-"+ymd(new Date())+".csv","text/csv")};
-document.getElementById("bk").onclick=function(){dl(JSON.stringify({entries:S.entries,products:S.products,bikes:S.bikes}),"ledger-backup-"+ymd(new Date())+".json","application/json")};
+var DLK="ll_dl_v1";
+function sumQty(id,type){var n=0;S.entries.forEach(function(e){if(e.productId===id&&e.type===type)n+=+e.qty||0});return n}
+function periodRange(p){if(Array.isArray(p))return p;var t=ymd(new Date()),d=pd(t);if(p==="today")return[t,t];if(p==="week"){var a=monday(t);return[a,addDays(a,6)]}
+  if(p==="month")return[ymd(new Date(d.getFullYear(),d.getMonth(),1)),ymd(new Date(d.getFullYear(),d.getMonth()+1,0))];
+  if(p==="last")return[ymd(new Date(d.getFullYear(),d.getMonth()-1,1)),ymd(new Date(d.getFullYear(),d.getMonth(),0))];return["0000-00-00","9999-99-99"]}
+function ent(p,type){var r=periodRange(p);return S.entries.filter(function(e){return e.date>=r[0]&&e.date<=r[1]&&e.type===type}).sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:a.id-b.id})}
+function ucost(e){var q=+e.qty||0;return q?Math.round(cst(e)/q):0}
+var DLT={
+ sales:{title:"Sales",rows:function(p){return ent(p,"Sale")},cols:[["date","Date",function(e){return e.date}],["item","Item",function(e){return e.item}],["qty","Qty",function(e){return +e.qty}],["price","Price each",function(e){return +e.price}],["total","Total",tot],["cost","Buying cost each",ucost],["profit","Profit",function(e){return tot(e)-cst(e)}],["method","Paid with",function(e){return e.method}],["note","Note",function(e){return e.note||""}],["by","Recorded by",function(e){return e.by||""}]]},
+ restock:{title:"Restocks",rows:function(p){return ent(p,"Restock")},cols:[["date","Date",function(e){return e.date}],["item","Item",function(e){return e.item}],["qty","Qty",function(e){return +e.qty}],["price","Buying cost each",function(e){return +e.price}],["total","Total",tot],["method","Paid with",function(e){return e.method}],["note","Note",function(e){return e.note||""}],["by","Recorded by",function(e){return e.by||""}]]},
+ expense:{title:"Expenses",rows:function(p){return ent(p,"Expense")},cols:[["date","Date",function(e){return e.date}],["item","Description",function(e){return e.item}],["total","Amount",tot],["method","Paid with",function(e){return e.method}],["note","Note",function(e){return e.note||""}],["by","Recorded by",function(e){return e.by||""}]]},
+ daily:{title:"Daily totals",rows:function(p){var r=periodRange(p),seen={};S.entries.forEach(function(e){if(e.date>=r[0]&&e.date<=r[1])seen[e.date]=1});return Object.keys(seen).sort().map(function(d){return{d:d,s:sum(S.entries.filter(function(e){return e.date===d}))}})},cols:[["date","Date",function(r){return r.d}],["count","Sales made",function(r){return r.s.count}],["sales","Sales",function(r){return r.s.sales}],["exp","Expenses",function(r){return r.s.exp}],["net","Net",function(r){return r.s.net}]]},
+ products:{title:"Products",rows:function(p,q){return S.products.filter(function(x){return !q||match(x.name,q)}).sort(function(a,b){return a.name.localeCompare(b.name,undefined,{numeric:true})})},cols:[["name","Product",function(p){return p.name}],["sell","Selling price",function(p){return +p.sell||0}],["cost","Buying cost",function(p){return +p.cost||0}],["open","Opening stock",function(p){return +p.open||0}],["in","Restocked",function(p){return sumQty(p.id,"Restock")}],["out","Sold",function(p){return sumQty(p.id,"Sale")}],["stock","In stock",function(p){return stockOf(p.id)}],["value","Stock value",function(p){return Math.max(0,stockOf(p.id))*(+p.cost||0)}],["low","Warn at",function(p){return +p.low||0}]]},
+ bikes:{title:"Bicycles",rows:function(p,q){return S.bikes.filter(function(b){return !q||match(bikeText(b),q)}).sort(function(a,b){return String(a.tag).localeCompare(String(b.tag),undefined,{numeric:true})})},cols:[["tag","Tag",function(b){return b.tag}],["brand","Brand",function(b){return b.brand||""}],["color","Color",function(b){return b.color||""}],["size","Size",function(b){return b.size||""}],["sell","Selling price",function(b){return +b.sell||0}],["cost","Buying cost",function(b){return +b.cost||0}],["status","Status",function(b){return b.status}],["sold","Date sold",function(b){return b.soldDate||""}],["note","Note",function(b){return b.note||""}]]}};
+var DLS=(function(){var s;try{s=JSON.parse(localStorage.getItem(DLK))}catch(e){}s=s||{};s.period=s.period||"month";s.q=s.q||"";s.fmt=s.fmt||"xlsx";s.t=s.t||{};
+  Object.keys(DLT).forEach(function(id){var t=s.t[id]||(s.t[id]={on:id==="sales"});if(!t.cols)t.cols=DLT[id].cols.map(function(c){return c[0]})});return s})();
+function dlSave(){try{localStorage.setItem(DLK,JSON.stringify(DLS))}catch(e){}}
+function renderDl(){
+  var P=[["today","Today"],["week","This week"],["month","This month"],["last","Last month"],["all","All time"]];
+  var h='<div class="dlrow"><label>Period<select id="dlp">'+P.map(function(x){return '<option value="'+x[0]+'"'+(x[0]===DLS.period?' selected':'')+'>'+x[1]+'</option>'}).join("")+'</select></label><label>File type<select id="dlf"><option value="xlsx"'+(DLS.fmt==="xlsx"?' selected':'')+'>Excel workbook (one sheet per table)</option><option value="csv"'+(DLS.fmt==="csv"?' selected':'')+'>CSV (one file per table)</option></select></label><label>Only products and bicycles matching these words (optional)<input id="dlq" value="'+esc(DLS.q)+'" placeholder="e.g. tube 26 black" autocomplete="off"></label></div><p class="note">Tick the tables you need, and the columns in each. Period applies to Sales, Restocks, Expenses and Daily totals. The words box narrows Products and Bicycles.</p>';
+  Object.keys(DLT).forEach(function(id){var t=DLS.t[id];h+='<div class="dlt'+(t.on?'':' off')+'"><label class="chip"><input type="checkbox" data-dt="'+id+'"'+(t.on?' checked':'')+'> <b>'+DLT[id].title+'</b></label><div class="chips">'+DLT[id].cols.map(function(c){return '<label class="chip"><input type="checkbox" data-dc="'+id+'" value="'+c[0]+'"'+(t.cols.indexOf(c[0])>-1?' checked':'')+'> '+c[1]+'</label>'}).join("")+'</div></div>'});
+  document.getElementById("dlpanel").innerHTML=h+'<div class="bar"><button class="btn pri" id="dlgo">Download</button><span id="dlmsg" class="note"></span></div>'}
+function csvText(t){var q=function(v){return '"'+String(v==null?"":v).replace(/"/g,'""')+'"'};return [t.head].concat(t.rows).map(function(r){return r.map(q).join(",")}).join("\r\n")}
+async function saveFile(name,data){
+  var blob=data instanceof Blob?data:new Blob([data]);
+  try{if(window.claude&&window.claude.use){var d=await window.claude.use("downloads");if(d){await d.save({filename:name,data:blob});return}}}catch(e){if(e&&e.code==="declined")throw e}
+  var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href)},4000)}
+async function runDl(only,q,per,label,extra){
+  var msg="",out=[];
+  Object.keys(DLT).forEach(function(id){var t=DLS.t[id];if(only?id!==only:!(t.on||(extra&&extra.indexOf(id)>-1)))return;var cols=DLT[id].cols.filter(function(c){return t.cols.indexOf(c[0])>-1});if(!cols.length)return;
+    out.push({title:DLT[id].title,head:cols.map(function(c){return c[1]}),rows:DLT[id].rows(per||DLS.period,q!=null?q:DLS.q).map(function(r){return cols.map(function(c){return c[2](r)})})})});
+  if(!out.length)return "Tick at least one table and one column.";
+  var fmt=DLS.fmt,stamp=ymd(new Date()),pre=only==="products"?"ledger-stock-":"ledger-";
+  if(fmt==="xlsx"&&!window.XLSX){fmt="csv";msg="The Excel tool did not load (are you offline?). Downloaded CSV instead. "}
+  try{
+    if(fmt==="xlsx"){var wb=XLSX.utils.book_new();out.forEach(function(t){XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([t.head].concat(t.rows)),t.title)});
+      await saveFile(pre+(label||stamp)+".xlsx",new Blob([XLSX.write(wb,{bookType:"xlsx",type:"array"})]))}
+    else for(var i=0;i<out.length;i++)await saveFile(pre+out[i].title.toLowerCase().replace(/\W+/g,"-")+"-"+(label||stamp)+".csv",new Blob(["\ufeff"+csvText(out[i])],{type:"text/csv"}));
+  }catch(err){return "Download was cancelled or did not work."}
+  return msg+"Done."+(out.length===1?" "+out[0].rows.length+" row(s).":"")}
+var dlp=document.getElementById("dlpanel");
+document.getElementById("dlbox").addEventListener("toggle",function(){if(this.open)renderDl()});
+dlp.addEventListener("change",function(e){var t=e.target;
+  if(t.id==="dlp")DLS.period=t.value;else if(t.id==="dlf")DLS.fmt=t.value;
+  else if(t.dataset.dt){DLS.t[t.dataset.dt].on=t.checked;t.closest(".dlt").classList.toggle("off",!t.checked)}
+  else if(t.dataset.dc){var c=DLS.t[t.dataset.dc].cols,i=c.indexOf(t.value);if(t.checked&&i<0)c.push(t.value);if(!t.checked&&i>-1)c.splice(i,1)}
+  dlSave()});
+dlp.addEventListener("click",function(e){if(e.target.id==="dlgo"){var m=document.getElementById("dlmsg");m.textContent="";runDl().then(function(r){m.textContent=r})}});
+dlp.addEventListener("input",function(e){if(e.target.id==="dlq"){DLS.q=e.target.value;dlSave()}});
+document.getElementById("bk").onclick=function(){markBk();Promise.resolve(dl(JSON.stringify({entries:S.entries,voided:S.voided,products:S.products,bikes:S.bikes}),"ledger-backup-"+ymd(new Date())+".json","application/json")).then(function(){if(S.view==="day")render()})};
 document.getElementById("rs").onclick=function(){document.getElementById("file").click()};
 document.getElementById("file").onchange=function(e){
   var f=e.target.files[0];if(!f)return;var r=new FileReader();
   r.onload=function(){try{var o=JSON.parse(r.result),a=Array.isArray(o)?o:o.entries;if(!Array.isArray(a))throw 0;
-    if(confirm("Replace the current ledger with "+a.length+" entries from this backup?")){S.entries=a;if(o&&Array.isArray(o.products))S.products=o.products;if(o&&Array.isArray(o.bikes))S.bikes=o.bikes;
-      if(window.LLCloud){S.entries.forEach(function(x){cp("entries",x)});S.products.forEach(function(x){cp("products",x)});S.bikes.forEach(function(x){cp("bikes",x)})}
+    if(confirm("Replace the current ledger with "+a.length+" entries from this backup?")){S.entries=a;if(o&&Array.isArray(o.products))S.products=o.products;if(o&&Array.isArray(o.bikes))S.bikes=o.bikes;if(o&&Array.isArray(o.voided)){S.voided=o.voided;saveV()}
+      if(window.LLCloud){S.entries.forEach(function(x){cp("entries",x)});S.products.forEach(function(x){cp("products",x)});S.bikes.forEach(function(x){cp("bikes",x)});S.voided.forEach(function(x){cp("entries",x)})}
       save();saveP();saveB();render()}}catch(x){alert("That file is not a ledger backup.")}};
   r.readAsText(f);e.target.value=""};
-function dl(text,name,type){var a=document.createElement("a");a.href="data:"+type+";charset=utf-8,"+encodeURIComponent(text);a.download=name;document.body.appendChild(a);a.click();a.remove()}
+function dl(text,name,type){return saveFile(name,new Blob([text],{type:type}))}
 document.getElementById("theme").onclick=function(){var r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark"};
-window.LLApp={S:S,render:render,save:save,saveP:saveP,saveB:saveB,setRole:setRole};
+window.LLApp={S:S,render:render,save:save,saveV:saveV,saveP:saveP,saveB:saveB,setRole:setRole};
 load();render();
 })();
 </script>
