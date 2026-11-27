@@ -31,7 +31,7 @@ input,select{border:1px solid var(--line);background:var(--card);padding:8px;bor
 .form{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:12px}
 .form label{display:flex;flex-direction:column;font-size:12px;color:var(--mut);gap:3px}
 .s2{grid-column:span 2}.s3{grid-column:span 3}.s4{grid-column:span 4}.s5{grid-column:span 5}.s6{grid-column:span 6}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}.stats.six{grid-template-columns:repeat(3,1fr)}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
 .stat small{color:var(--mut);display:block}
 .stat b{font:700 19px Georgia,serif;font-variant-numeric:tabular-nums}
@@ -66,7 +66,7 @@ input[readonly]{background:var(--hl);color:var(--mut)}
 .note{color:var(--mut);font-size:13px}
 details.mon{background:var(--card);border:1px solid var(--line);border-radius:10px;margin:8px 0;padding:0 12px}.mon summary{display:flex;justify-content:space-between;gap:4px 12px;padding:12px 0;cursor:pointer;flex-wrap:wrap}.mon .bar{margin:0 0 8px}.mon .wrap{margin-bottom:12px}
 .alertbar{background:var(--hl);border:1px solid var(--out);color:var(--out);border-radius:10px;padding:10px 12px;margin-bottom:12px;cursor:pointer;font-weight:600}
-.sales{min-width:640px;font-size:14px}.sales th,.sales td{padding:7px 9px;border-right:1px solid var(--line)}.sales thead th{background:var(--card)}
+.sales{min-width:640px;font-size:14px}.dtab{min-width:560px}.acts{white-space:nowrap}.sales th,.sales td{padding:7px 9px;border-right:1px solid var(--line)}.sales thead th{background:var(--card)}
 .sales td[data-label=Item],.sales td[data-label=Note]{max-width:220px;overflow:hidden;text-overflow:ellipsis}
 input[type=checkbox]{min-height:0;width:20px;height:20px;padding:0;flex:none}
 .dlbox{flex:1 1 100%}.dlbox summary{display:inline-flex;align-items:center;list-style:none;cursor:pointer}.dlbox summary::-webkit-details-marker{display:none}
@@ -75,23 +75,31 @@ input[type=checkbox]{min-height:0;width:20px;height:20px;padding:0;flex:none}
 .chips{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:8px}.chip{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--fg)}
 .locked #tabs,.locked #view,.locked .foot,.locked .note,.att .foot{display:none}
 @media (max-width:640px){
+.stats.six{grid-template-columns:repeat(2,1fr)}
 main{padding:10px}h1{font-size:18px}
 .tabs button{font-size:13px;padding:10px 9px}
 .form{grid-template-columns:repeat(2,1fr)}.s2,.s3,.s4,.s5,.s6{grid-column:span 2}
 .stats{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}
 .bike{grid-template-columns:auto 1fr}.bk{grid-column:1/-1}.btnc{grid-column:span 2}
-.stack{min-width:0}.stack thead{display:none}
-.stack tbody tr{display:block;margin:8px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
-.stack tbody tr:nth-child(even){background:var(--hl)}
-.stack td{display:flex;justify-content:space-between;align-items:center;gap:12px;white-space:normal;text-align:right;border-bottom:1px solid var(--line);padding:8px 12px}
-.stack td:empty{display:none}.stack td:last-child{border-bottom:0;justify-content:flex-end}
-.stack td::before{content:attr(data-label);color:var(--mut);font-size:13px;text-align:left}
-.stack td.pname{font-weight:700;justify-content:flex-start}
-.stack td.pname::before,.stack td.empty::before,.stack tfoot td::before{content:none}
-.stack td.empty{display:block;text-align:center}
-.stack tfoot tr{display:flex;justify-content:space-between;padding:8px 12px}
-.stack tfoot td{display:block;border:0;padding:0}
-.wrap:has(.stack){background:none;border:0}}
+.stack,.stack>tbody,.stack>tfoot{display:block;width:100%}.stack{min-width:0}.stack>thead{display:none}
+.stack>tbody>tr{display:block;margin:8px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+.stack>tbody>tr:nth-child(even){background:var(--hl)}
+.stack>tbody>tr>td{border-right:0;display:flex;justify-content:space-between;align-items:center;gap:12px;white-space:normal;text-align:right;border-bottom:1px solid var(--line);padding:8px 12px;max-width:none;overflow:visible}
+.stack>tbody>tr>td:empty{display:none}.stack>tbody>tr>td:last-child{border-bottom:0;justify-content:flex-end}
+.stack>tbody>tr>td::before{content:attr(data-label);color:var(--mut);font-size:13px;text-align:left}
+.stack>tbody>tr>td.pname{font-weight:700;justify-content:flex-start}
+.stack>tbody>tr>td.pname::before,.stack>tbody>tr>td.empty::before,.stack>tfoot>tr>td::before{content:none}
+.stack>tbody>tr>td.empty{display:block;text-align:center}
+.stack>tbody>tr>td.acts{flex-wrap:wrap;gap:6px}
+.sales.stack>tbody>tr>td{border-right:0;max-width:none;overflow:visible;text-overflow:clip}
+.wrap table[style*="min-width:0"] th,.wrap table[style*="min-width:0"] td{padding:8px 6px;font-size:13.5px}
+.hm{display:none}
+.wrap table.pt th,.wrap table.pt td{padding:8px 4px;font-size:12.5px}
+.wrap table[style*="min-width:0"] td .btn{padding:6px 10px;min-height:38px}
+.stack>tbody>tr.hist{margin:0 8px 8px;border:0;background:none}.stack>tbody>tr.hist>td{display:block;padding:0;border:0;text-align:left}.stack>tbody>tr.hist>td::before{content:none}
+.stack>tfoot>tr{display:flex;justify-content:space-between;padding:8px 12px}
+.stack>tfoot>tr>td{display:block;border:0;padding:0}
+.wrap:has(>.stack){background:none;border:0}}
 /* mobile fit: let grid items and inputs shrink instead of pushing the page wider than the screen */
 .form>*,.stats>*,.two>*,.bike>*,.dlrow>*{min-width:0}
 .form input,.form select,.form textarea{width:100%;min-width:0;max-width:100%}
@@ -123,7 +131,7 @@ var S={entries:[],voided:[],products:[],bikes:[],view:"day",date:ymd(new Date())
 function lsGet(k){try{var r=localStorage.getItem(k);return r?JSON.parse(r)||[]:[]}catch(e){return[]}}
 function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){alert("Could not save in this browser. Download a backup now.")}}
 function load(){S.voided=lsGet(VKEY);S.entries=lsGet(KEY);S.products=lsGet(PKEY);S.bikes=lsGet(BKEY)}
-function saveV(){lsSet(VKEY,S.voided)}function save(){lsSet(KEY,S.entries)}function saveP(){lsSet(PKEY,S.products)}function saveB(){lsSet(BKEY,S.bikes)}
+function saveV(){lsSet(VKEY,S.voided)}function save(){CS=null;lsSet(KEY,S.entries)}function saveP(){lsSet(PKEY,S.products)}function saveB(){lsSet(BKEY,S.bikes)}
 function cp(c,o){if(window.LLCloud&&o)window.LLCloud.put(c,o)}
 function cd(c,id){if(window.LLCloud)window.LLCloud.del(c,id)}
 var adm=function(){return S.role==="admin"};
@@ -146,33 +154,48 @@ function score(text,q){var t=norm(q).split(" ").filter(Boolean),x=norm(text);ret
 function bikeText(b){return [b.tag,b.brand,b.color,b.size,b.note].join(" ").toLowerCase()}
 function tot(e){return (+e.qty||0)*(+e.price||0)}
 function cst(e){if(e.type!=="Sale")return 0;var c=+e.cost||0;if(!c){var o=e.bikeId?bikeOf(e.bikeId):e.productId?prodOf(e.productId):null;c=o?+o.cost||0:0}return (+e.qty||0)*c}
-function stockOf(id){var p=prodOf(id),n=p?+p.open||0:0;S.entries.forEach(function(e){if(e.productId===id){if(e.type==="Sale")n-=+e.qty||0;else if(e.type==="Restock")n+=+e.qty||0}});return n}
+var CS=null;
+/* Credit rule: a credit sale does not leave stock until that customer has paid it in full.
+   Payments are matched to the customer's credit sales oldest first. */
+function creditState(){if(CS)return CS;var st={},by={},pay={};
+  S.entries.forEach(function(e){if(e.type==="Sale"&&e.method==="Credit"){var k=norm(e.note);if(k)(by[k]=by[k]||[]).push(e)}else if(e.type==="Payment"){var k2=norm(e.item);pay[k2]=(pay[k2]||0)+tot(e)}});
+  Object.keys(by).forEach(function(k){var left=pay[k]||0;by[k].sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:a.id-b.id}).forEach(function(e){var t=tot(e);if(left+0.5>=t){left-=t;st[e.id]=true}else{st[e.id]=false;left=0}})});
+  return CS=st}
+function onCredit(e){return e.type==="Sale"&&e.method==="Credit"&&creditState()[e.id]===false}
+function heldQty(id){var n=0;S.entries.forEach(function(e){if(e.productId===id&&onCredit(e))n+=+e.qty||0});return n}
+function bikeCredit(b){if(!b||!b.saleId)return null;var e=S.entries.find(function(x){return String(x.id)===String(b.saleId)});return e&&onCredit(e)?e:null}
+function settleBikes(){var ch=false;S.bikes.forEach(function(b){if(!b.saleId)return;var e=S.entries.find(function(x){return String(x.id)===String(b.saleId)});if(!e||e.type!=="Sale"||e.method!=="Credit")return;var held=creditState()[e.id]===false;
+  if(!held&&b.status!=="Sold"){b.status="Sold";b.soldDate=ymd(new Date());saveB();cp("bikes",b);ch=true}
+  else if(held&&b.status==="Sold"&&adm()){b.status="Available";b.soldDate="";saveB();cp("bikes",b);ch=true}});return ch}
+function stockOf(id){var p=prodOf(id),n=p?+p.open||0:0;S.entries.forEach(function(e){if(e.productId===id){if(e.type==="Sale"){if(!onCredit(e))n-=+e.qty||0}else if(e.type==="Restock")n+=+e.qty||0}});return n}
 function inRange(a,b){return S.entries.filter(function(e){return e.date>=a&&e.date<=b})}
 function sum(list){
-  var r={sales:0,exp:0,cost:0,count:0,costKnown:true,by:{},top:{}};
+  var r={sales:0,exp:0,cost:0,count:0,costKnown:true,by:{},top:{},bikeSales:0,bikeCount:0,spareSales:0,spareCount:0};
   list.forEach(function(e){
     var t=tot(e);
-    if(e.type==="Sale"){r.sales+=t;r.cost+=cst(e);r.count++;if(!(cst(e)>0))r.costKnown=false;
+    if(e.type==="Sale"){r.sales+=t;if(e.bikeId){r.bikeSales+=t;r.bikeCount++}else{r.spareSales+=t;r.spareCount++}r.cost+=cst(e);r.count++;if(!(cst(e)>0))r.costKnown=false;
       r.by[e.method]=(r.by[e.method]||0)+t;
       var k=(e.item||"").trim().toLowerCase();if(k){var o=r.top[k]||(r.top[k]={name:e.item.trim(),qty:0,amt:0});o.qty+=+e.qty||0;o.amt+=t}}
     else if(e.type==="Payment")r.paid=(r.paid||0)+t;
     else r.exp+=t});
   r.profit=r.sales-r.cost;r.net=r.sales-r.exp;return r}
-function stats(r){
-  if(!adm())return '<div class="stats"><div class="stat"><small>Sales</small><b class="in">'+money(r.sales)+'</b></div><div class="stat"><small>Sales made</small><b>'+r.count+'</b></div></div>';
-  return '<div class="stats"><div class="stat"><small>Sales</small><b class="in">'+money(r.sales)+'</b></div>'+
-  '<div class="stat"><small>Expenses (restock, other)</small><b class="out">'+money(r.exp)+'</b></div>'+
-  '<div class="stat"><small>Sales minus expenses</small><b class="'+(r.net<0?"out":"in")+'">'+money(r.net)+'</b></div>'+
-  '<div class="stat"><small>Profit on goods sold'+(r.costKnown?'':' (some costs missing)')+'</small><b>'+money(r.profit)+'</b></div></div>'}
+function stats(r,sp){
+  var box=function(l,v,c,sub){return '<div class="stat"><small>'+l+'</small><b'+(c?' class="'+c+'"':'')+'>'+v+'</b>'+(sub?'<small>'+sub+'</small>':'')+'</div>'};
+  var core=box("Total sales",money(r.sales),"in")+box("Spare parts sales",money(r.spareSales),"in",r.spareCount+" sold")+box("Bicycle sales",money(r.bikeSales),"in",r.bikeCount+" sold");
+  if(sp){if(!adm())return '<div class="stats">'+box("Spare parts sales",money(r.sales),"in")+box("Sales made",r.count)+'</div>';
+    return '<div class="stats">'+box("Spare parts sales",money(r.sales),"in",r.count+" sold")+box("Expenses (restock, other)",money(r.exp),"out")+box("Sales minus expenses",money(r.net),r.net<0?"out":"in")+box("Profit on spare parts"+(r.costKnown?'':' (some costs missing)'),money(r.profit))+'</div>'}
+  if(!adm())return '<div class="stats">'+core+box("Sales made",r.count)+'</div>';
+  return '<div class="stats six">'+core+box("Expenses (restock, other)",money(r.exp),"out")+box("Sales minus expenses",money(r.net),r.net<0?"out":"in")+box("Profit on goods sold"+(r.costKnown?'':' (some costs missing)'),money(r.profit))+'</div>'}
 function extras(r){
   var by=Object.keys(r.by).map(function(k){return '<tr><td>'+esc(k)+'</td><td class="n">'+money(r.by[k])+'</td></tr>'}).join("");
   var top=Object.keys(r.top).map(function(k){return r.top[k]}).sort(function(a,b){return b.amt-a.amt}).slice(0,8).map(function(o){return '<tr><td>'+esc(o.name)+'</td><td class="n">'+o.qty+'</td><td class="n">'+money(o.amt)+'</td></tr>'}).join("");
   return '<div class="two"><div><h2>Sales by payment</h2><div class="wrap"><table style="min-width:0"><tbody>'+(by||'<tr><td class="empty">No sales yet</td></tr>')+'</tbody></table></div></div>'+
   '<div><h2>Best-selling items</h2><div class="wrap"><table style="min-width:0"><thead><tr><th>Item</th><th class="n">Qty</th><th class="n">Amount</th></tr></thead><tbody>'+(top||'<tr><td colspan="3" class="empty">No sales yet</td></tr>')+'</tbody></table></div></div></div>'}
 
+function allDay(){return S.entries.filter(function(e){return e.date===S.date&&(adm()||e.type==="Sale")})}
 function formHTML(){
   var f=S.form,a=adm(),sale=f.type==="Sale",res=f.type==="Restock",pay=f.type==="Credit payment";
-  var ph=sale?"Search: tube 26 black front, or bike tag 020":res?"Search a product to restock":pay?"Customer name (pick from the list)":"e.g. Rent, transport";
+  var ph=sale?"Search: tube 26 black front":res?"Search a product to restock":pay?"Customer name (pick from the list)":"e.g. Rent, transport";
   var L=function(c,t,x){return '<label class="'+c+'">'+t+x+'</label>'};
   var one=a?"s1":"s2";
   var h='<form class="form" id="f" onsubmit="return false">';
@@ -180,9 +203,9 @@ function formHTML(){
   if(res)h+='<div class="s6 note prev" id="prev">Pick a product to see its current prices. Change a price only if it is different.</div>';
   if(a)h+=L("s1","Type",'<select id="ty">'+opts(["Sale","Restock","Expense","Credit payment"],f.type)+'</select>');
   h+=L(one,res||sale?"Qty":"Qty (optional)",'<input id="q" type="number" min="0" step="any" value="1" inputmode="decimal">');
-  h+=L(one,sale?"Selling price each":res?"Buying cost each":pay?"Amount paid":"Amount",'<input id="p" type="number" min="0" step="any" inputmode="decimal" required>');
-  if(res&&a)h+=L("s1","New selling price",'<input id="ps2" type="number" min="0" step="any" inputmode="decimal" placeholder="same">');
-  if(sale&&a)h+=L("s1","Buying cost each",'<input id="c" type="number" min="0" step="any" inputmode="decimal">');
+  h+=L(one,sale?"Selling price each":res?"Buying cost each":pay?"Amount paid":"Amount",'<input id="p" type="text" data-m="1" inputmode="decimal" required>');
+  if(res&&a)h+=L("s1","New selling price",'<input id="ps2" type="text" data-m="1" inputmode="decimal" placeholder="same">');
+  if(sale&&a)h+=L("s1","Buying cost each",'<input id="c" type="text" data-m="1" inputmode="decimal">');
   h+=L(a?(sale||res?"s2":"s3"):"s2","Paid with",sale?'<select id="m">'+opts(METHODS,f.method)+'</select>':'<select id="m2">'+opts(METHODS.slice(0,3),f.method)+'</select>');
   h+=L("s5","Note (customer name for credit)",'<input id="nt">');
   return h+'<div class="btnc" style="align-self:end"><button class="btn pri" id="add" style="width:100%">Add entry</button></div></form>'}
@@ -196,32 +219,35 @@ function closeExpected(list){var ex={};CMETH.forEach(function(m){ex[m]=0});var c
 function diffTxt(d){return d===0?'<span class="in">Matches</span>':'<span class="'+(d<0?"out":"in")+'">'+(d>0?"+":"")+money(d)+(d<0?" short":" over")+'</span>'}
 function closeHTML(list){if(!adm())return "";var c=closeExpected(list),saved=ccGet()[S.date]||{};
   var rows=CMETH.map(function(m,i){var v=saved[m],has=v!==undefined&&v!=="";
-    return '<tr><td>'+m+'</td><td class="n">'+money(c.ex[m])+'</td><td class="n"><input class="sm" id="cc'+i+'" data-cc="'+m+'" type="number" min="0" step="any" inputmode="decimal" value="'+(has?esc(v):"")+'" placeholder="count"></td><td class="n" id="ccd'+i+'">'+(has?diffTxt((+v||0)-c.ex[m]):"")+'</td></tr>'}).join("");
-  return '<details class="mon" id="closebox"'+(S.closeOpen?' open':'')+'><summary><b>Close the day: count the money</b><span>'+dlabel(S.date)+'</span></summary><div class="wrap"><table style="min-width:0"><thead><tr><th>Paid with</th><th class="n">Should have</th><th class="n">You counted</th><th class="n">Difference</th></tr></thead><tbody>'+rows+'</tbody></table></div><p class="note">Should have = sales and credit payments received, minus expenses and restocks paid that way, for this date. Credit sales today: '+money(c.credit)+' (not counted). Counts are kept on this device.</p></details>'}
+    return '<tr><td class="pname">'+m+'</td><td class="n" data-label="Should have">'+money(c.ex[m])+'</td><td class="n" data-label="You counted"><input class="sm" id="cc'+i+'" data-cc="'+m+'" type="text" data-m="1" inputmode="decimal" value="'+(has?esc(v):"")+'" placeholder="count"></td><td class="n" id="ccd'+i+'" data-label="Difference">'+(has?diffTxt((+v||0)-c.ex[m]):"")+'</td></tr>'}).join("");
+  return '<details class="mon" id="closebox"'+(S.closeOpen?' open':'')+'><summary><b>Close the day: count the money</b><span>'+dlabel(S.date)+'</span></summary><div class="wrap"><table class="stack" style="min-width:0"><thead><tr><th>Paid with</th><th class="n">Should have</th><th class="n">You counted</th><th class="n">Difference</th></tr></thead><tbody>'+rows+'</tbody></table></div><p class="note">Should have = sales and credit payments received, minus expenses and restocks paid that way, for this date. This count includes bicycle sales too. Credit sales today: '+money(c.credit)+' (not counted). Counts are kept on this device.</p></details>'}
 function earlierDays(){var a=adm(),days={};
-  S.entries.forEach(function(e){if(e.date===S.date||(!a&&e.type!=="Sale"))return;(days[e.date]||(days[e.date]=[])).push(e)});
+  S.entries.forEach(function(e){if(e.date===S.date||(!a&&e.type!=="Sale")||(e.type==="Sale"&&e.bikeId))return;(days[e.date]||(days[e.date]=[])).push(e)});
   var ds=Object.keys(days),before=ds.filter(function(d){return d<S.date}).sort().reverse(),after=ds.filter(function(d){return d>S.date}).sort();
   var row=function(d){var r=sum(days[d]);return '<tr><td>'+dfull(d)+'</td><td class="n">'+r.count+'</td><td class="n in">'+money(r.sales)+'</td><td><button class="btn" data-open="'+d+'">Open</button></td></tr>'};
   var h='<h2>Other days</h2><div class="bar"><label class="note" style="display:flex;align-items:center;gap:8px">Go to any date <input type="date" id="dt" value="'+S.date+'"></label></div>';
   if(!before.length&&!after.length)return h+'<div class="wrap"><div class="empty">No other days recorded yet.</div></div>';
   return h+'<div class="wrap"><table style="min-width:0"><thead><tr><th>Day</th><th class="n">Sales made</th><th class="n">Sales</th><th></th></tr></thead><tbody>'+before.slice(0,30).map(row).join("")+after.map(row).join("")+'</tbody></table></div>'+(before.length>30?'<p class="note">Showing the latest 30 earlier days. Use “Go to any date” or the History tab for older days.</p>':'')}
 function dayView(){
-  var list=S.entries.filter(function(e){return e.date===S.date&&(adm()||e.type==="Sale")}).sort(function(a,b){return b.id-a.id});
+  var full=allDay(),list=full.filter(function(e){return !(e.type==="Sale"&&e.bikeId)}).sort(function(a,b){return b.id-a.id});
   var r=sum(list),a=adm();
   var today=ymd(new Date()),isT=S.date===today;
-  var h='<h2 style="margin:4px 0 10px">'+(isT?'Today · ':'Ledger · ')+dfull(S.date)+'</h2>'+(isT?'':'<div class="bar"><button class="btn pri" data-d="0">‹ Back to today</button></div>');
-  h+=stats(r)+alertBar()+bkBar()+formHTML()+closeHTML(list);
-  h+='<div class="wrap"><table class="sales"><thead><tr><th>Type</th><th>Item</th><th class="n">Qty</th><th class="n">Price</th><th class="n">Total</th><th>Paid with</th><th>Note</th>'+(a?'<th>By</th>':'')+'<th></th></tr></thead><tbody>';
-  if(!list.length)h+='<tr><td colspan="9" class="empty">Nothing recorded for '+dlabel(S.date)+'. Add the first entry above.</td></tr>';
-  list.forEach(function(e){h+='<tr><td data-label="Type" class="'+(e.type==="Sale"||e.type==="Payment"?"in":"out")+'">'+(e.type==="Payment"?"Credit payment":e.type)+'</td><td data-label="Item" title="'+esc(e.item)+'">'+esc(e.item)+'</td><td class="n" data-label="Qty">'+e.qty+'</td><td class="n" data-label="Price">'+money(e.price)+'</td><td class="n" data-label="Total">'+money(tot(e))+'</td><td data-label="Paid with">'+esc(e.method)+'</td><td data-label="Note" title="'+esc(e.note)+'">'+esc(e.note)+'</td>'+(a?'<td data-label="By">'+esc(e.by||"")+'</td>':'')+'<td>'+(a?'<button class="x" data-x="'+e.id+'" aria-label="Void entry" title="Void this entry">✕</button>':'')+'</td></tr>'});
-  return h+'</tbody></table></div>'+extras(r)+earlierDays()}
+  var h='<h2 style="margin:4px 0 10px">Spare parts · '+(isT?'Today · ':'')+dfull(S.date)+'</h2>'+(isT?'':'<div class="bar"><button class="btn pri" data-d="0">‹ Back to today</button></div>');
+  h+=stats(r,true)+alertBar()+bkBar()+formHTML()+closeHTML(full);
+  var head='<thead><tr><th>Type</th><th>Item</th><th class="n">Qty</th><th class="n">Price</th><th class="n">Total</th><th>Paid with</th><th>Note</th>'+(a?'<th>By</th>':'')+'<th></th></tr></thead>';
+  var rowOf=function(e){var held=onCredit(e);return '<tr><td data-label="Type" class="'+(e.type==="Sale"||e.type==="Payment"?"in":"out")+'">'+(e.type==="Payment"?"Credit payment":e.type)+(held?' <small class="low">· unpaid, kept in stock</small>':'')+'</td><td data-label="Item" title="'+esc(e.item)+'">'+esc(e.item)+'</td><td class="n" data-label="Qty">'+e.qty+'</td><td class="n" data-label="Price">'+money(e.price)+'</td><td class="n" data-label="Total">'+money(tot(e))+'</td><td data-label="Paid with">'+esc(e.method)+'</td><td data-label="Note" title="'+esc(e.note)+'">'+esc(e.note)+'</td>'+(a?'<td data-label="By">'+esc(e.by||"")+'</td>':'')+'<td>'+(a?'<button class="x" data-x="'+e.id+'" aria-label="Void entry" title="Void this entry">✕</button>':'')+'</td></tr>'};
+  var grp=function(title,arr,m2){if(!arr.length)return '';return '<h2>'+title+' <small class="note">('+arr.length+(m2!==undefined?' · '+money(m2):'')+')</small></h2><div class="wrap"><table class="sales stack">'+head+'<tbody>'+arr.map(rowOf).join("")+'</tbody></table></div>'};
+  var sp=list.filter(function(e){return e.type==="Sale"}),ot=list.filter(function(e){return e.type!=="Sale"});
+  if(!list.length)h+='<div class="wrap"><table class="sales stack">'+head+'<tbody><tr><td colspan="9" class="empty">Nothing recorded for '+dlabel(S.date)+'. Add the first entry above.</td></tr></tbody></table></div>';
+  else h+=grp("Spare parts sales",sp,r.sales)+grp(a?"Restocks, expenses and credit payments":"Other",ot);
+  return h+extras(r)+earlierDays()}
 
 function periodTable(days){
-  var rows="",T={s:0,e:0,c:0};
+  var rows="",T={s:0,e:0,c:0,sp:0,bk:0};
   days.forEach(function(d){var r=sum(S.entries.filter(function(e){return e.date===d}));
-    T.s+=r.sales;T.e+=r.exp;T.c+=r.count;
-    rows+='<tr class="go" data-go="'+d+'"><td>'+dlabel(d)+'</td><td class="n">'+r.count+'</td><td class="n in">'+money(r.sales)+'</td><td class="n out">'+money(r.exp)+'</td><td class="n">'+money(r.net)+'</td></tr>'});
-  return '<div class="wrap"><table style="min-width:0"><thead><tr><th>Day</th><th class="n">Sales made</th><th class="n">Sales</th><th class="n">Expenses</th><th class="n">Net</th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr><td>Total</td><td class="n">'+T.c+'</td><td class="n">'+money(T.s)+'</td><td class="n">'+money(T.e)+'</td><td class="n">'+money(T.s-T.e)+'</td></tr></tfoot></table></div>'}
+    T.s+=r.sales;T.e+=r.exp;T.c+=r.count;T.sp+=r.spareSales;T.bk+=r.bikeSales;
+    rows+='<tr class="go" data-go="'+d+'"><td>'+dlabel(d)+'</td><td class="n hm">'+r.count+'</td><td class="n">'+money(r.spareSales)+'</td><td class="n">'+money(r.bikeSales)+'</td><td class="n in">'+money(r.sales)+'</td><td class="n out">'+money(r.exp)+'</td><td class="n">'+money(r.net)+'</td></tr>'});
+  return '<div class="wrap"><table class="pt" style="min-width:0"><thead><tr><th>Day</th><th class="n hm">Sales made</th><th class="n">Spares</th><th class="n">Bikes</th><th class="n">Sales</th><th class="n">Expenses</th><th class="n">Net</th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr><td>Total</td><td class="n hm">'+T.c+'</td><td class="n">'+money(T.sp)+'</td><td class="n">'+money(T.bk)+'</td><td class="n">'+money(T.s)+'</td><td class="n">'+money(T.e)+'</td><td class="n">'+money(T.s-T.e)+'</td></tr></tfoot></table></div>'}
 function cmpText(r,pr,w){return pr.sales?(r.sales>=pr.sales?'<span class="in">up ':'<span class="out">down ')+Math.abs(Math.round((r.sales-pr.sales)/pr.sales*100))+'% on last '+w+'</span>':''}
 function weekView(){
   var a=monday(S.date),b=addDays(a,6),days=[];for(var i=0;i<7;i++)days.push(addDays(a,i));
@@ -238,14 +264,45 @@ function bikeCards(){
   var list=S.bikes.filter(function(b){return (S.bf==="All"||(S.bf==="Sold")===(b.status==="Sold"))&&(!q||match(bikeText(b),q))})
     .sort(function(x,y){return (String(y.tag).toLowerCase()===q)-(String(x.tag).toLowerCase()===q)||String(x.tag).localeCompare(String(y.tag),undefined,{numeric:true})});
   if(!list.length)return '<div class="empty">'+(S.bikes.length?'No bicycle matches. Try another tag or change the filter.':'No bicycles yet.'+(a?' Add the first one above.':''))+'</div>';
-  return list.map(function(b){var sold=b.status==="Sold";
+  return list.map(function(b){var sold=b.status==="Sold",bc=bikeCredit(b);
     return '<div class="bike"><div class="bt">'+esc(b.tag)+'</div><div class="bd"><b>'+esc(b.brand||"Bicycle")+'</b><span>Color: '+esc(b.color||"–")+'</span><span>Size: '+esc(b.size||"–")+'</span><span>Price: '+money(b.sell)+'</span>'+(a&&b.cost?'<span>Cost: '+money(b.cost)+'</span>':'')+(b.note?'<span>'+esc(b.note)+'</span>':'')+(sold&&b.soldDate?'<span>Sold '+esc(b.soldDate)+'</span>':'')+'</div>'+
-    '<div class="badge '+(sold?'out':'in')+'">'+(sold?"Sold":"Available")+'</div>'+
-    '<div class="bk">'+(sold?'':'<button class="btn pri" data-sell="'+b.id+'">Sell</button>')+(a&&!sold?'<button class="btn" data-be="'+b.id+'">Edit</button><button class="btn" data-bx="'+b.id+'">Remove</button>':'')+'</div></div>'}).join("")}
+    '<div class="badge '+(sold?'out':bc?'low':'in')+'">'+(sold?"Sold":bc?"On credit · "+esc(bc.note):"Available")+'</div>'+
+    '<div class="bk">'+(sold||bc?'':'<button class="btn pri" data-sell="'+b.id+'">Sell</button>')+(a&&!sold&&!bc?'<button class="btn" data-be="'+b.id+'">Edit</button><button class="btn" data-bx="'+b.id+'">Remove</button>':'')+'</div></div>'}).join("")}
+function bikeSalesList(f){return S.entries.filter(function(e){return e.type==="Sale"&&e.bikeId&&(!f||f(e))})}
+function bikeTot(list){var r={n:list.length,sales:0,cost:0,known:true};list.forEach(function(e){r.sales+=tot(e);var c=cst(e);r.cost+=c;if(!(c>0))r.known=false});r.profit=r.sales-r.cost;return r}
+function bikeReport(){var a=adm(),now=ymd(new Date()),mo=now.slice(0,7);
+  var rows=[["Today",function(e){return e.date===now}],["This month",function(e){return e.date.slice(0,7)===mo}],["All time",null]].map(function(x){var r=bikeTot(bikeSalesList(x[1]));
+    return '<tr><td>'+x[0]+'</td><td class="n">'+r.n+'</td><td class="n in">'+money(r.sales)+'</td>'+(a?'<td class="n">'+(r.n?money(r.profit)+(r.known?'':' *'):'–')+'</td>':'')+'</tr>'}).join("");
+  return '<h2>Bicycle sales'+(a?' and profit':'')+'</h2><div class="wrap"><table style="min-width:0"><thead><tr><th>Period</th><th class="n">Bikes sold</th><th class="n">Sales</th>'+(a?'<th class="n">Profit</th>':'')+'</tr></thead><tbody>'+rows+'</tbody></table></div>'+(a?'<p class="note">* some bicycles have no buying cost recorded, so their profit is the full selling price. Set the cost under Edit.</p>':'')}
+function bikeSalesTable(){var a=adm(),now=ymd(new Date()),d=S.bdate||now,isT=d===now;
+  var list=bikeSalesList(function(e){return e.date===d}).sort(function(x,y){return y.id-x.id}),r=bikeTot(list);
+  var box=function(l,v,c,sub){return '<div class="stat"><small>'+l+'</small><b'+(c?' class="'+c+'"':'')+'>'+v+'</b>'+(sub?'<small>'+sub+'</small>':'')+'</div>'};
+  var h='<h2>Bicycle ledger · '+(isT?'Today · ':'')+dfull(d)+'</h2><div class="bar"><button class="btn" data-bd="-1">‹ Previous day</button><input type="date" id="bdt" value="'+d+'"><button class="btn" data-bd="1">Next day ›</button>'+(isT?'':'<button class="btn pri" data-bd="0">Back to today</button>')+'</div>';
+  h+='<div class="stats'+(a?'':'')+'">'+box("Bikes sold",r.n)+box("Sales",money(r.sales),"in")+(a?box("Profit"+(r.known||!r.n?'':' (some costs missing)'),r.n?money(r.profit):"–"):'')+'</div>';
+  h+='<div class="wrap"><table class="sales stack"><thead><tr><th>Bicycle</th><th class="n">Price</th>'+(a?'<th class="n">Cost</th><th class="n">Profit</th>':'')+'<th>Paid with</th><th>Customer</th><th>Status</th><th>By</th>'+(a?'<th></th>':'')+'</tr></thead><tbody>';
+  if(!list.length)h+='<tr><td colspan="9" class="empty">No bicycle sold on '+dlabel(d)+'.</td></tr>';
+  list.forEach(function(e){var c=cst(e),held=onCredit(e);
+    h+='<tr><td data-label="Bicycle">'+esc(e.item)+'</td><td class="n" data-label="Price">'+money(tot(e))+'</td>'+(a?'<td class="n" data-label="Cost">'+(c>0?money(c):'–')+'</td><td class="n" data-label="Profit">'+(c>0?money(tot(e)-c):'–')+'</td>':'')+'<td data-label="Paid with">'+esc(e.method)+'</td><td data-label="Customer">'+esc(e.note)+'</td><td data-label="Status" class="'+(held?'low':'in')+'">'+(held?'Unpaid, still in stock':'Paid')+'</td><td data-label="By">'+esc(e.by||"")+'</td>'+(a?'<td><button class="x" data-x="'+e.id+'" aria-label="Void sale" title="Void this sale">✕</button></td>':'')+'</tr>'});
+  h+='</tbody>'+(list.length?'<tfoot><tr><td>Total · '+r.n+' bike'+(r.n>1?'s':'')+'</td><td class="n">'+money(r.sales)+'</td>'+(a?'<td class="n">'+money(r.cost)+'</td><td class="n">'+money(r.profit)+'</td>':'')+'<td colspan="'+(a?5:4)+'"></td></tr></tfoot>':'')+'</table></div>';
+  var days={};bikeSalesList(function(e){return e.date!==d}).forEach(function(e){(days[e.date]=days[e.date]||[]).push(e)});
+  var ds=Object.keys(days).sort().reverse().slice(0,30);
+  if(ds.length)h+='<h2>Other days with bicycle sales</h2><div class="wrap"><table style="min-width:0"><thead><tr><th>Day</th><th class="n">Bikes sold</th><th class="n">Sales</th>'+(a?'<th class="n">Profit</th>':'')+'<th></th></tr></thead><tbody>'+ds.map(function(k){var t=bikeTot(days[k]);return '<tr><td>'+dlabel(k)+'</td><td class="n">'+t.n+'</td><td class="n in">'+money(t.sales)+'</td>'+(a?'<td class="n">'+money(t.profit)+'</td>':'')+'<td><button class="btn" data-bopen="'+k+'">Open</button></td></tr>'}).join("")+'</tbody></table></div>';
+  return h}
+function sellPanel(){var b=S.sellBike?bikeOf(S.sellBike):null;if(!b||b.status==="Sold"||bikeCredit(b))return "";var a=adm();
+  return '<h2>Sell bicycle '+esc(b.tag)+'</h2><form class="form" onsubmit="return false"><div class="s6 note">'+esc(bikeLabel(b))+'</div><label class="s2">Selling price<input id="bsp" type="text" data-m="1" inputmode="decimal" value="'+(+b.sell||"")+'"></label>'+(a?'<label class="s2">Buying cost<input id="bsc" type="text" data-m="1" inputmode="decimal" value="'+(+b.cost||"")+'"></label>':'')+'<label class="s2">Paid with<select id="bsm">'+opts(METHODS,"Cash")+'</select></label>'+(a?'<label class="s3">Date<input type="date" id="bsd" value="'+(S.bdate||ymd(new Date()))+'"></label>':'')+'<label class="'+(a?'s3':'s6')+'">Customer name (needed for credit)<input id="bsn" autocomplete="off"></label><div class="s3"><button class="btn pri" id="bsok" style="width:100%">Confirm sale</button></div><div class="s3"><button class="btn" id="bscancel" style="width:100%">Cancel</button></div></form>'}
+function sellBikeNow(){var b=bikeOf(S.sellBike);if(!b||b.status==="Sold"||bikeCredit(b)){S.sellBike=null;render();return}
+  var g=function(i){var x=document.getElementById(i);return x?x.value:""};
+  var price=parseFloat(g("bsp")),method=g("bsm"),note=g("bsn").trim(),date=g("bsd")||ymd(new Date());
+  if(g("bsp")===""||!(price>=0)){document.getElementById("bsp").focus();return}
+  if(method==="Credit"&&!note){alert("Enter the customer’s name for a credit sale.");document.getElementById("bsn").focus();return}
+  var en={id:Date.now(),by:window.LLWho||(adm()?"Admin":""),date:date,type:"Sale",item:bikeLabel(b),productId:"",bikeId:b.id,qty:1,price:price,cost:adm()?(parseFloat(g("bsc"))||0):0,method:method,note:note};
+  S.entries.push(en);CS=null;cp("entries",en);
+  if(method==="Credit"){b.saleId=en.id}else{b.status="Sold";b.soldDate=date;b.saleId=en.id}
+  saveB();cp("bikes",b);S.sellBike=null;save();render()}
 function bikesView(){
   var a=adm(),e=S.editBike?bikeOf(S.editBike):null,v=function(k){return e?esc(e[k]):""};
-  var h='';
-  if(a)h+='<h2>'+(e?'Edit bicycle '+esc(e.tag):'Add a bicycle')+'</h2><form class="form" onsubmit="return false"><label>Tag number<input id="bt" value="'+v("tag")+'" placeholder="e.g. 020" inputmode="numeric"></label><label class="s2">Brand or model<input id="bb" value="'+v("brand")+'"></label><label>Color<input id="bc" value="'+v("color")+'"></label><label>Size<input id="bs" value="'+v("size")+'" placeholder="e.g. 26 inch"></label><label>Selling price<input id="bp" type="number" min="0" step="any" value="'+v("sell")+'"></label><label>Buying cost<input id="bco" type="number" min="0" step="any" value="'+v("cost")+'"></label><label class="s4">Note (condition, details)<input id="bn" value="'+v("note")+'"></label><div class="s6" style="display:flex;gap:6px"><button class="btn pri" id="badd">'+(e?'Save changes':'Add bicycle')+'</button>'+(e?'<button class="btn" id="bcancel">Cancel</button>':'')+'</div></form>';
+  var h=bikeReport()+sellPanel()+bikeSalesTable();
+  if(a)h+='<h2>'+(e?'Edit bicycle '+esc(e.tag):'Add a bicycle')+'</h2><form class="form" onsubmit="return false"><label>Tag number<input id="bt" value="'+v("tag")+'" placeholder="e.g. 020" inputmode="numeric"></label><label class="s2">Brand or model<input id="bb" value="'+v("brand")+'"></label><label>Color<input id="bc" value="'+v("color")+'"></label><label>Size<input id="bs" value="'+v("size")+'" placeholder="e.g. 26 inch"></label><label>Selling price<input id="bp" type="text" data-m="1" inputmode="decimal" value="'+v("sell")+'"></label><label>Buying cost<input id="bco" type="text" data-m="1" inputmode="decimal" value="'+v("cost")+'"></label><label class="s4">Note (condition, details)<input id="bn" value="'+v("note")+'"></label><div class="s6" style="display:flex;gap:6px"><button class="btn pri" id="badd">'+(e?'Save changes':'Add bicycle')+'</button>'+(e?'<button class="btn" id="bcancel">Cancel</button>':'')+'</div></form>';
   h+='<h2>Find a bicycle</h2><div class="bar"><input type="search" id="bq" value="'+esc(S.bq)+'" placeholder="Type the tag number, brand or color" autocomplete="off"><select id="bf">'+opts(["Available","Sold","All"],S.bf)+'</select></div>';
   return h+'<div id="bres">'+bikeCards()+'</div>'}
 function saveBike(){
@@ -261,14 +318,14 @@ function productTable(){
   var a=adm(),val=0,lowN=0,q=S.pq,cnt=S.products.filter(function(p){return !q||match(p.name,q)}).length;
   S.products.forEach(function(p){if(stockOf(p.id)<=(+p.low||0))lowN++;val+=Math.max(0,stockOf(p.id))*(+p.cost||0)});
   var rows=S.products.filter(function(p){return !q||match(p.name,q)}).sort(function(x,y){return x.name.localeCompare(y.name,undefined,{numeric:true})}).map(function(p){var st=stockOf(p.id),isLow=st<=(+p.low||0);
-    var stk='<td class="n '+(isLow?"low":"")+'" data-label="In stock">'+st+(st<=0?' · out':isLow?' · low':'')+'</td>';
+    var stk='<td class="n '+(isLow?"low":"")+'" data-label="In stock">'+st+(st<=0?' · out':isLow?' · low':'')+(heldQty(p.id)?'<br><small class="note">incl. '+heldQty(p.id)+' on credit, unpaid</small>':'')+'</td>';
     if(!a)return '<tr><td class="pname">'+esc(p.name)+'</td><td class="n" data-label="Selling price">'+money(p.sell)+'</td>'+stk+'</tr>';
-    var ed=S.editP===p.id;var inp=function(f,l){if(!ed)return '<td class="n" data-label="'+l+'">'+money(p[f])+'</td>';return '<td class="n" data-label="'+l+'"><input class="sm" type="number" min="0" step="any" value="'+(+p[f]||0)+'" data-pf="'+f+'" data-pid="'+p.id+'"></td>'};
+    var ed=S.editP===p.id;var inp=function(f,l){if(!ed)return '<td class="n" data-label="'+l+'">'+money(p[f])+'</td>';return '<td class="n" data-label="'+l+'"><input class="sm" type="text" data-m="1" inputmode="decimal" value="'+(+p[f]||0)+'" data-pf="'+f+'" data-pid="'+p.id+'"></td>'};
     return '<tr><td class="pname">'+esc(p.name)+'</td>'+inp("sell","Selling price")+inp("cost","Buying cost")+inp("open","Opening stock")+inp("low","Warn at")+stk+'<td class="n" data-label="Stock value">'+money(Math.max(0,st)*(+p.cost||0))+'</td><td><button class="btn'+(ed?' pri':'')+'" data-pe="'+p.id+'">'+(ed?'Done':'Edit')+'</button> <button class="x" data-px="'+p.id+'" aria-label="Delete product">✕</button></td></tr>'}).join("");
-  return (q?'<p class="note">'+cnt+' of '+S.products.length+' products match.</p>':'')+(lowN?'<p class="low">'+lowN+' product(s) at or below the warning level.</p>':'')+'<div class="wrap"><table class="plist"><thead><tr><th>Product</th><th class="n">Selling price</th>'+(a?'<th class="n">Buying cost</th><th class="n">Opening stock</th><th class="n">Warn at</th>':'')+'<th class="n">In stock</th>'+(a?'<th class="n">Stock value</th><th></th>':'')+'</tr></thead><tbody>'+(rows||'<tr><td colspan="8" class="empty">'+(S.products.length?'No product matches. Try fewer words.':'No products yet.'+(a?' Add your first product above.':''))+'</td></tr>')+'</tbody>'+(a?'<tfoot><tr><td colspan="6">Value of all stock at buying cost</td><td class="n">'+money(val)+'</td><td></td></tr></tfoot>':'')+'</table></div>'}
+  return (q?'<p class="note">'+cnt+' of '+S.products.length+' products match.</p>':'')+(lowN?'<p class="low">'+lowN+' product(s) at or below the warning level.</p>':'')+'<div class="wrap"><table class="plist stack"><thead><tr><th>Product</th><th class="n">Selling price</th>'+(a?'<th class="n">Buying cost</th><th class="n">Opening stock</th><th class="n">Warn at</th>':'')+'<th class="n">In stock</th>'+(a?'<th class="n">Stock value</th><th></th>':'')+'</tr></thead><tbody>'+(rows||'<tr><td colspan="8" class="empty">'+(S.products.length?'No product matches. Try fewer words.':'No products yet.'+(a?' Add your first product above.':''))+'</td></tr>')+'</tbody>'+(a?'<tfoot><tr><td colspan="6">Value of all stock at buying cost</td><td class="n">'+money(val)+'</td><td></td></tr></tfoot>':'')+'</table></div>'}
 function productsView(){
   var a=adm();
-  var h=a?'<h2>Add a product</h2><form class="form" onsubmit="return false"><label class="s2">Name (include size, color, position)<input id="pn" placeholder="e.g. Tube 26 black front"></label><label>Selling price<input id="ps" type="number" min="0" step="any"></label><label>Buying cost<input id="pc" type="number" min="0" step="any"></label><label>Stock now<input id="po" type="number" min="0" step="any" value="0"></label><label>Warn at<input id="pl" type="number" min="0" step="any" value="2"></label><div class="s6"><button class="btn pri" id="padd">Add product</button></div></form>':'';
+  var h=a?'<h2>Add a product</h2><form class="form" onsubmit="return false"><label class="s2">Name (include size, color, position)<input id="pn" placeholder="e.g. Tube 26 black front"></label><label>Selling price<input id="ps" type="text" data-m="1" inputmode="decimal"></label><label>Buying cost<input id="pc" type="text" data-m="1" inputmode="decimal"></label><label>Stock now<input id="po" type="text" data-m="1" inputmode="decimal" value="0"></label><label>Warn at<input id="pl" type="text" data-m="1" inputmode="decimal" value="2"></label><div class="s6"><button class="btn pri" id="padd">Add product</button></div></form>':'';
   h+='<h2>Find a product</h2><div class="bar"><input type="search" id="pq" class="big" value="'+esc(S.pq)+'" placeholder="Type any words, e.g. tube 26 black" autocomplete="off">'+(a?'<button class="btn" id="pdl">Download this list (Excel)</button>':'')+'</div>'+(a?'<p class="note" id="pdlmsg"></p>':'');
   return h+'<div id="pres">'+productTable()+'</div>'+(a?'<p class="note">In stock = opening stock + restocks − sales. Record restocks in the Day tab with type Restock. Opening stock is for fixing the count when it is wrong.</p>':'')}
 function addProduct(){
@@ -291,7 +348,6 @@ function suggest(){
   if(t==="Credit payment"){var dq=(it.value||"").trim(),dl2=debtorData().filter(function(d){return d.bal>0&&(!dq||match(d.name,dq))}).slice(0,8);
     sg.innerHTML=dl2.length?dl2.map(function(d){return '<button type="button" data-debtor="'+esc(d.name)+'"><span>'+esc(d.name)+'</span><span class="out">owes '+money(d.bal)+'</span></button>'}).join(""):(dq?'<div class="hint">No customer owing with that name. It will be recorded as typed.</div>':'');return}
   var q=it.value.trim(),ql=q.toLowerCase(),out=[];
-  if(t==="Sale")S.bikes.filter(function(b){return b.status!=="Sold"&&(!q||match(bikeText(b),q))}).sort(function(x,y){return (String(y.tag).toLowerCase()===ql)-(String(x.tag).toLowerCase()===ql)||String(x.tag).localeCompare(String(y.tag),undefined,{numeric:true})}).slice(0,6).forEach(function(b){out.push('<button type="button" data-bike="'+b.id+'"><span>Bike '+esc(b.tag)+' · '+esc(bikeDesc(b))+'</span><span>'+money(b.sell)+'</span></button>')});
   var ps=S.products.filter(function(p){return !q||match(p.name,q)}).sort(function(x,y){return x.name.localeCompare(y.name,undefined,{numeric:true})});
   ps.slice(0,12).forEach(function(p){var st=stockOf(p.id);out.push('<button type="button" data-pick="'+p.id+'"><span>'+esc(p.name)+'</span><span>'+money(t==="Sale"?p.sell:p.cost)+' · <span class="'+(st<=0?"out":"")+'">'+st+' in stock</span></span></button>')});
   if(ps.length>12)out.push('<div class="hint">'+(ps.length-12)+' more. Type more words to narrow it down.</div>');
@@ -307,7 +363,7 @@ function add(){
   if(!(qty>0)){document.getElementById("q").focus();return}
   var method=sale?g("m"):g("m2"),note=g("nt").trim();
   if(sale&&method==="Credit"&&!note){alert("Enter the customer’s name in the note for a credit sale.");document.getElementById("nt").focus();return}
-  var b=S.pickBike?bikeOf(S.pickBike):null;if(!(b&&sale&&b.status!=="Sold"&&item===bikeLabel(b)))b=null;
+  var b=S.pickBike?bikeOf(S.pickBike):null;if(!(b&&sale&&b.status!=="Sold"&&!bikeCredit(b)&&item===bikeLabel(b)))b=null;
   if(b)qty=1;
   var pid=b?"":(S.products.find(function(x){return x.name.toLowerCase()===item.toLowerCase()})||{}).id||"";
   if(!pid&&!b&&type==="Restock"){var cand=S.products.filter(function(x){return match(x.name,item)});
@@ -318,8 +374,8 @@ function add(){
   var newSell=null;
   if(pid&&type==="Restock"){var pp=prodOf(pid);if(pp){var stB=stockOf(pid);pp.cost=stB>0?Math.round((stB*(+pp.cost||0)+qty*price)/(stB+qty)):price;var ns=parseFloat(g("ps2"));if(ns>=0&&g("ps2")!==""&&ns!==(+pp.sell||0)){pp.sell=ns;newSell=ns}saveP();cp("products",pp)}}
   var en={id:Date.now(),by:window.LLWho||(adm()?"Admin":""),date:S.date,type:type,item:item,productId:pid,bikeId:b?b.id:"",qty:qty,price:price,cost:sale&&adm()?(parseFloat(g("c"))||0):0,method:method,note:note};
-  S.entries.push(en);cp("entries",en);
-  if(b){b.status="Sold";b.soldDate=S.date;b.saleId=en.id;saveB();cp("bikes",b)}
+  S.entries.push(en);CS=null;cp("entries",en);
+  if(b){if(method==="Credit"){b.saleId=en.id;saveB();cp("bikes",b)}else{b.status="Sold";b.soldDate=S.date;b.saleId=en.id;saveB();cp("bikes",b)}}
   var p2=pid?prodOf(pid):null;
   if(type==="Restock"&&p2)S.flash="Restocked "+p2.name+": +"+qty+", now "+stockOf(pid)+" in stock. Average buying cost is now "+money(p2.cost)+"."+(newSell!==null?" Selling price is now "+money(newSell)+".":"");
   if(sale&&p2){var s2=stockOf(pid);if(s2<=(+p2.low||0))S.flash="⚠ "+p2.name+": "+(s2<=0?"out of stock":"only "+s2+" left")+" (warn at "+(+p2.low||0)+")."}
@@ -335,18 +391,18 @@ function debtorHist(d){var k=norm(d.name),bal=0,ed=S.editPay;
   var list=S.entries.filter(function(e){return (e.type==="Sale"&&e.method==="Credit"&&norm(e.note)===k)||(e.type==="Payment"&&norm(e.item)===k)}).sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:a.id-b.id});
   var rows=list.map(function(e){var pay=e.type==="Payment",t=tot(e);bal+=pay?-t:t;var editing=pay&&String(ed)===String(e.id);
     var det=pay?"Payment received":"Credit sale: "+esc(e.item)+(+e.qty!==1?" ×"+e.qty:"");
-    var amt=editing?'<input class="sm" type="number" min="0" step="any" inputmode="decimal" data-pf2="price" data-pid2="'+e.id+'" value="'+(+e.price||0)+'">':(pay?"−":"+")+money(t);
+    var amt=editing?'<input class="sm" type="text" data-m="1" inputmode="decimal" data-pf2="price" data-pid2="'+e.id+'" value="'+(+e.price||0)+'">':(pay?"−":"+")+money(t);
     var dt=editing?'<input type="date" data-pf2="date" data-pid2="'+e.id+'" value="'+esc(e.date)+'">':dlabel(e.date);
-    var act=pay?'<button class="btn'+(editing?' pri':'')+'" data-pe2="'+e.id+'">'+(editing?"Done":"Edit")+'</button> <button class="x" data-x="'+e.id+'" aria-label="Void payment" title="Void this payment">✕</button>':"";
+    var act=(pay&&adm())?'<button class="btn'+(editing?' pri':'')+'" data-pe2="'+e.id+'">'+(editing?"Done":"Edit")+'</button> <button class="x" data-x="'+e.id+'" aria-label="Void payment" title="Void this payment">✕</button>':"";
     return '<tr><td>'+dt+'</td><td>'+det+'</td><td class="n '+(pay?"in":"")+'">'+amt+'</td><td class="n"><b>'+money(bal)+'</b></td><td>'+esc(e.by||"")+'</td><td>'+act+'</td></tr>'}).join("");
   return '<tr class="hist"><td colspan="6"><div class="wrap" style="margin:4px 0"><table style="min-width:520px;font-size:14px"><thead><tr><th>Date</th><th>What</th><th class="n">Amount</th><th class="n">Balance</th><th>By</th><th></th></tr></thead><tbody>'+(rows||'<tr><td colspan="6" class="empty">Nothing recorded</td></tr>')+'</tbody></table></div></td></tr>'}
 function debtorsView(){var all=debtorData(),owing=all.filter(function(d){return d.bal>0}),total=owing.reduce(function(n,d){return n+d.bal},0);
   var list=S.showSettled?all:owing;
-  var h='<h2>Customers who owe money</h2><p class="note">Built from credit sales. A credit sale needs the customer’s name in the note. When a customer pays, even a part, press Record payment. Press History to see every credit and payment, and to correct a payment.</p>';
+  var h='<h2>Customers who owe money</h2><p class="note">'+(!adm()?'Customers with unpaid credit. Goods sold on credit stay counted in stock until fully paid. Press History to see every credit and payment. Payments are recorded by the admin.':'Built from credit sales. A credit sale needs the customer’s name in the note. Goods sold on credit stay counted in stock until the customer has paid that sale in full (payments clear a customer’s oldest credit first); a credit bicycle shows as “On credit” and turns Sold once paid. When a customer pays, even a part, press Record payment (admin). Press History to see every credit and payment, and to correct a payment.')+'</p>';
   h+='<div class="bar"><button class="btn'+(S.showSettled?' pri':'')+'" id="dset">'+(S.showSettled?'Showing all customers':'Show customers who have paid up')+'</button></div>';
   if(!list.length)return h+'<div class="wrap"><div class="empty">Nobody owes anything right now.</div></div>';
-  h+='<div class="wrap"><table style="min-width:560px"><thead><tr><th>Customer</th><th class="n">Credit taken</th><th class="n">Paid</th><th class="n">Still owes</th><th>Last credit</th><th></th></tr></thead><tbody>'+list.map(function(d){var k=norm(d.name),open=S.openD===k;
-    return '<tr><td>'+esc(d.name)+'</td><td class="n">'+money(d.owed)+'</td><td class="n">'+money(d.paid)+'</td><td class="n '+(d.bal>0?"out":d.bal<0?"low":"in")+'"><b>'+(d.bal>0?money(d.bal):d.bal<0?"overpaid "+money(-d.bal):"Paid up")+'</b></td><td>'+(d.last?dlabel(d.last):"")+'</td><td style="white-space:nowrap"><button class="btn" data-pay="'+esc(d.name)+'">Record payment</button> <button class="btn'+(open?' pri':'')+'" data-dh="'+esc(k)+'">'+(open?"Hide":"History")+'</button></td></tr>'+(open?debtorHist(d):"")}).join("")+'</tbody><tfoot><tr><td colspan="3">Total owed to the shop</td><td class="n out">'+money(total)+'</td><td colspan="2"></td></tr></tfoot></table></div>';
+  h+='<div class="wrap"><table class="stack dtab"><thead><tr><th>Customer</th><th class="n">Credit taken</th><th class="n">Paid</th><th class="n">Still owes</th><th>Last credit</th><th></th></tr></thead><tbody>'+list.map(function(d){var k=norm(d.name),open=S.openD===k;
+    return '<tr><td class="pname">'+esc(d.name)+'</td><td class="n" data-label="Credit taken">'+money(d.owed)+'</td><td class="n" data-label="Paid">'+money(d.paid)+'</td><td data-label="Still owes" class="n '+(d.bal>0?"out":d.bal<0?"low":"in")+'"><b>'+(d.bal>0?money(d.bal):d.bal<0?"overpaid "+money(-d.bal):"Paid up")+'</b></td><td data-label="Last credit">'+(d.last?dlabel(d.last):"")+'</td><td class="acts">'+(adm()?'<button class="btn" data-pay="'+esc(d.name)+'">Record payment</button> ':'')+'<button class="btn'+(open?' pri':'')+'" data-dh="'+esc(k)+'">'+(open?"Hide":"History")+'</button></td></tr>'+(open?debtorHist(d):"")}).join("")+'</tbody><tfoot><tr><td colspan="3">Total owed to the shop</td><td class="n out">'+money(total)+'</td><td colspan="2"></td></tr></tfoot></table></div>';
   return h}
 function alertData(){
   var low=[],out=[],unl=[];
@@ -391,8 +447,9 @@ function archiveView(){
   h+=voidedHTML();
   return h}
 var NAMES={day:"Day",week:"Week",month:"Month",history:"History",bikes:"Bikes",products:"Products",debtors:"Debtors",alerts:"Alerts"};
-function allowed(){return adm()?["day","week","month","history","bikes","products","debtors","alerts"]:["day","bikes","products","alerts"]}
+function allowed(){return adm()?["day","week","month","history","bikes","products","debtors","alerts"]:["day","bikes","products","debtors","alerts"]}
 function render(){
+  CS=null;if(settleBikes())CS=null;
   if(allowed().indexOf(S.view)<0)S.view="day";
   document.body.classList.toggle("att",!adm());
   var ac=alertCount();document.getElementById("tabs").innerHTML=allowed().map(function(v){return '<button role="tab" data-v="'+v+'" class="'+(v==="alerts"&&ac?"hot":"")+'" aria-selected="'+(v===S.view)+'">'+NAMES[v]+(v==="alerts"&&ac?" ("+ac+")":"")+'</button>'}).join("");
@@ -418,7 +475,10 @@ vw.addEventListener("click",function(e){
   if(t.dataset.pay){S.view="day";S.form.type="Credit payment";S.date=ymd(new Date());render();var ix2=document.getElementById("it"),dn2=t.dataset.pay,dd2=debtorData().find(function(x){return x.name===dn2});if(ix2)ix2.value=dn2;var px2=document.getElementById("p");if(px2){px2.value="";px2.placeholder=dd2?"owes "+money(dd2.bal):"";px2.focus()}scrollTo(0,0);return}
   var bk=t.closest("[data-bike]");if(bk){fillBike(bk.dataset.bike);var q1=document.getElementById("p");if(q1)q1.focus();return}
   var pk=t.closest("[data-pick]");if(pk){fillProduct(pk.dataset.pick);var q0=document.getElementById("q");if(q0){q0.focus();q0.select()}return}
-  if(t.dataset.sell){S.view="day";S.form.type="Sale";S.date=ymd(new Date());render();fillBike(t.dataset.sell);scrollTo(0,0);return}
+  if(t.dataset.sell){S.sellBike=t.dataset.sell;render();scrollTo(0,0);return}
+  if(t.dataset.bd!==undefined){var n3=+t.dataset.bd;S.bdate=n3===0?ymd(new Date()):addDays(S.bdate||ymd(new Date()),n3);render();return}
+  if(t.dataset.bopen){S.bdate=t.dataset.bopen;render();scrollTo(0,0);return}
+  if(t.id==="bsok"){sellBikeNow();return}if(t.id==="bscancel"){S.sellBike=null;render();return}
   if(t.dataset.be){S.editBike=t.dataset.be;render();scrollTo(0,0);return}
   if(t.dataset.bx){var b2=bikeOf(t.dataset.bx);if(b2&&confirm("Remove bicycle "+b2.tag+" from the list?")){cd("bikes",b2.id);S.bikes=S.bikes.filter(function(x){return x.id!==b2.id});saveB();render()}return}
   if(t.id==="badd"){saveBike();return}
@@ -458,6 +518,7 @@ vw.addEventListener("focusin",function(e){if(e.target.id==="it")suggest()});
 vw.addEventListener("change",function(e){
   var t=e.target;
   if(t.id==="dt"&&t.value){S.date=t.value;render()}
+  if(t.id==="bdt"&&t.value){S.bdate=t.value;render()}
   if(t.id==="mo"&&t.value){S.date=t.value+"-01";render()}
   if(t.id==="ty"){S.form.type=t.value;S.pickBike=null;render()}
   if(t.id==="m"||t.id==="m2")S.form.method=t.value;
@@ -528,6 +589,22 @@ function dl(text,name,type){return saveFile(name,new Blob([text],{type:type}))}
 document.getElementById("theme").onclick=function(){var r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark"};
 window.LLApp={S:S,render:render,save:save,saveV:saveV,saveP:saveP,saveB:saveB,setRole:setRole};
 load();render();
+})();
+</script>
+<script>
+/* Thousand separators in money boxes: shows 1,500,000 while typing; code still reads plain numbers. */
+(function(){
+var d=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,"value");if(!d||!d.get)return;
+Object.defineProperty(HTMLInputElement.prototype,"value",{configurable:true,enumerable:d.enumerable,
+get:function(){var v=d.get.call(this);return this.hasAttribute("data-m")?v.replace(/,/g,""):v},
+set:function(v){d.set.call(this,v)}});
+function fmt(s){s=String(s).replace(/[^0-9.]/g,"");var i=s.indexOf("."),a=i<0?s:s.slice(0,i),b=i<0?"":"."+s.slice(i+1).replace(/\./g,"");return a.replace(/\B(?=(\d{3})+(?!\d))/g,",")+b}
+function apply(el,keepCaret){var raw=d.get.call(el),nv=fmt(raw);if(nv===raw)return;
+ if(keepCaret){var pos=el.selectionStart,left=raw.slice(0,pos).replace(/[^0-9.]/g,"").length;d.set.call(el,nv);var c=0,k=0;while(k<nv.length&&c<left){if(/[0-9.]/.test(nv[k]))c++;k++}try{el.setSelectionRange(k,k)}catch(e){}}
+ else d.set.call(el,nv)}
+document.addEventListener("input",function(e){var t=e.target;if(t&&t.hasAttribute&&t.hasAttribute("data-m"))apply(t,true)},true);
+function sweep(){var l=document.querySelectorAll("input[data-m]");for(var i=0;i<l.length;i++)if(l[i]!==document.activeElement)apply(l[i],false)}
+new MutationObserver(sweep).observe(document.body,{childList:true,subtree:true});sweep();
 })();
 </script>
 <script type="module" src="cloud.js"></script>
