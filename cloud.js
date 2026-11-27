@@ -85,10 +85,10 @@ if (!CONFIG.apiKey || CONFIG.apiKey.startsWith("PASTE")) {
     if (!user) { formView(); return; }
     say("Checking your account…");
     try { const s = await getDoc(doc(db, BASE + "staff/" + user.uid)); role = s.exists() ? (s.data().role === "admin" ? "admin" : "attendant") : null; }
-    catch (e) { role = null; }
+        catch (e) { role = null; window.LLErr = e.code || e.message; }
     if (!role) {
       lock(true);
-      say('<span class="low">This account is not set up for the ledger yet. Ask the owner to add it.</span><button class="btn" id="cout">Sign out</button>');
+           say('<span class="low">This account is not set up for the ledger yet. Ask the owner to add it.<br>UID: ' + user.uid + '<br>Error: ' + (window.LLErr || "none, document not found") + '</span><button class="btn" id="cout">Sign out</button>');
       document.getElementById("cout").onclick = () => signOut(auth);
       return;
     }
