@@ -92,6 +92,13 @@ main{padding:10px}h1{font-size:18px}
 .stack tfoot tr{display:flex;justify-content:space-between;padding:8px 12px}
 .stack tfoot td{display:block;border:0;padding:0}
 .wrap:has(.stack){background:none;border:0}}
+/* mobile fit: let grid items and inputs shrink instead of pushing the page wider than the screen */
+.form>*,.stats>*,.two>*,.bike>*,.dlrow>*{min-width:0}
+.form input,.form select,.form textarea{width:100%;min-width:0;max-width:100%}
+.bar input,.bar select{max-width:100%}
+.tabs{scrollbar-width:none;-webkit-overflow-scrolling:touch}.tabs::-webkit-scrollbar{display:none}
+.top h1{min-width:0;overflow-wrap:anywhere}
+img,svg,video{max-width:100%}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
 </head>
