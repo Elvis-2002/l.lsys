@@ -1,16 +1,321 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#101820" />
-    <meta name="description" content="L.L Bicycle Center inventory and sales management" />
-    <link rel="manifest" href="./manifest.webmanifest" />
-    <link rel="icon" href="./logo.svg" type="image/svg+xml" />
-    <title>L.L Bicycle Center</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg"><meta name="theme-color" content="#0f5c6e"><title>L.L Bicycle Center – Daily Ledger</title>
+<style>
+:root{--bg:#f2f6f4;--card:#fff;--fg:#14231e;--mut:#5f7169;--line:#cfdad5;--acc:#0f5c6e;--in:#1f7a4d;--out:#b3392f;--hl:#e6f0ec;--onacc:#fff;color-scheme:light;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1815;--card:#17231f;--fg:#e6efeb;--mut:#93a8a0;--line:#2b3d37;--acc:#5cc2d6;--in:#5fcf93;--out:#f08a80;--hl:#1e2f29;--onacc:#0f1815;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1815;--card:#17231f;--fg:#e6efeb;--mut:#93a8a0;--line:#2b3d37;--acc:#5cc2d6;--in:#5fcf93;--out:#f08a80;--hl:#1e2f29;--onacc:#0f1815;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:920px;margin:0 auto;padding:14px}
+h1{font:700 21px Georgia,"Times New Roman",serif;margin:0}
+h2{font:700 16px Georgia,serif;margin:18px 0 8px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.tabs{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--card)}
+.tabs button{flex:1;border:0;background:none;color:var(--fg);padding:10px 4px;min-height:44px;font:inherit;font-weight:600;cursor:pointer}
+.tabs button[aria-selected="true"]{background:var(--acc);color:var(--onacc)}
+.bar{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:12px 0}
+button,input,select{font:inherit;color:var(--fg);touch-action:manipulation}
+input,select{border:1px solid var(--line);background:var(--card);padding:8px;border-radius:7px;min-width:0;min-height:44px;font-size:16px}
+.btn{border:1px solid var(--line);background:var(--card);padding:8px 14px;min-height:44px;border-radius:7px;cursor:pointer}
+.btn.pri{background:var(--acc);border-color:var(--acc);color:var(--onacc);font-weight:600}
+:focus-visible{outline:2px solid var(--acc);outline-offset:1px}
+.bar input[type=date],.bar input[type=month],.bar input[type=search]{flex:1 1 140px}
+#cloud input{flex:1 1 150px}
+.form{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:12px}
+.form label{display:flex;flex-direction:column;font-size:12px;color:var(--mut);gap:3px}
+.s2{grid-column:span 2}.s3{grid-column:span 3}.s4{grid-column:span 4}.s5{grid-column:span 5}.s6{grid-column:span 6}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.stat small{color:var(--mut);display:block}
+.stat b{font:700 19px Georgia,serif;font-variant-numeric:tabular-nums}
+.in{color:var(--in)}.out{color:var(--out)}.low{color:var(--out);font-weight:700}
+.wrap{overflow-x:auto;background:var(--card);border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+tbody tr:nth-child(even){background:var(--hl)}
+th{font-size:13px;color:var(--mut);font-weight:600;border-bottom:2px solid var(--line)}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}
+tfoot td{font-weight:700;border-top:2px solid var(--line);border-bottom:0}
+.x{border:0;background:none;color:var(--out);cursor:pointer;font-size:16px;min-width:44px;min-height:44px}
+.empty{padding:22px;text-align:center;color:var(--mut)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.go{cursor:pointer}
+.sm{width:92px;text-align:right}
+.sg{position:absolute;left:0;right:0;top:100%;z-index:5;background:var(--card);border:1px solid var(--line);border-radius:7px;max-height:240px;overflow:auto;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.sg:empty{display:none}
+.sg button{display:flex;justify-content:space-between;gap:10px;width:100%;border:0;border-bottom:1px solid var(--line);background:none;padding:10px;text-align:left;cursor:pointer;color:var(--fg)}
+.sg button:hover,.sg button:focus{background:var(--hl)}
+.bike{display:grid;grid-template-columns:auto 1fr auto;gap:8px 14px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:8px}
+.bt{font:700 28px Georgia,serif;min-width:70px;text-align:center;border:2px solid var(--acc);border-radius:8px;padding:4px 8px;color:var(--acc)}
+.bd{display:flex;flex-wrap:wrap;gap:2px 16px}.bd b{flex-basis:100%;font-size:16px}.bd span{color:var(--mut)}
+.badge{font-weight:700}
+.bk{display:flex;gap:6px;flex-wrap:wrap}
+.foot{display:flex;gap:6px;flex-wrap:wrap;margin-top:18px}
+.note{color:var(--mut);font-size:13px}
+.locked #tabs,.locked #view,.locked .foot,.locked .note,.att .foot{display:none}
+@media (max-width:640px){
+main{padding:10px}h1{font-size:18px}
+.tabs button{font-size:14px;padding:10px 2px}
+.form{grid-template-columns:repeat(2,1fr)}.s2,.s3,.s4,.s5,.s6{grid-column:span 2}
+.stats{grid-template-columns:repeat(2,1fr)}.two{grid-template-columns:1fr}
+.bike{grid-template-columns:auto 1fr}.bk{grid-column:1/-1}
+.stack{min-width:0}.stack thead{display:none}
+.stack tbody tr{display:block;margin:8px;border:1px solid var(--line);border-radius:10px;background:var(--card)}
+.stack tbody tr:nth-child(even){background:var(--hl)}
+.stack td{display:flex;justify-content:space-between;align-items:center;gap:12px;white-space:normal;text-align:right;border-bottom:1px solid var(--line);padding:8px 12px}
+.stack td:empty{display:none}.stack td:last-child{border-bottom:0;justify-content:flex-end}
+.stack td::before{content:attr(data-label);color:var(--mut);font-size:13px;text-align:left}
+.stack td.pname{font-weight:700;justify-content:flex-start}
+.stack td.pname::before,.stack td.empty::before,.stack tfoot td::before{content:none}
+.stack td.empty{display:block;text-align:center}
+.stack tfoot tr{display:flex;justify-content:space-between;padding:8px 12px}
+.stack tfoot td{display:block;border:0;padding:0}
+.wrap:has(.stack){background:none;border:0}}
+</style>
+</head>
+<body>
+<main>
+  <div class="top"><h1>L.L Bicycle Center · Daily Ledger</h1><button class="btn" id="theme" aria-label="Switch light or dark">◐</button></div>
+  <div class="bar" id="cloud"></div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div id="view"></div>
+  <div class="foot">
+    <button class="btn" id="csv">Download Excel (CSV)</button>
+    <button class="btn" id="bk">Save backup</button>
+    <button class="btn" id="rs">Restore backup</button>
+    <input type="file" id="file" accept=".json" hidden>
+  </div>
+  <p class="note">Entries are saved on this device first. When signed in, they also sync to the cloud. Saving a backup file now and then is still a good habit.</p>
+</main>
+<script>
+(function(){
+var KEY="ll_ledger_v1",PKEY="ll_products_v1",BKEY="ll_bikes_v1",METHODS=["Cash","MTN Mobile Money","Airtel Money","Credit"];
+var S={entries:[],products:[],bikes:[],view:"day",date:ymd(new Date()),form:{type:"Sale",method:"Cash"},role:"admin",pickBike:null,bq:"",bf:"Available",editBike:null};
+function lsGet(k){try{var r=localStorage.getItem(k);return r?JSON.parse(r)||[]:[]}catch(e){return[]}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){alert("Could not save in this browser. Download a backup now.")}}
+function load(){S.entries=lsGet(KEY);S.products=lsGet(PKEY);S.bikes=lsGet(BKEY)}
+function save(){lsSet(KEY,S.entries)}function saveP(){lsSet(PKEY,S.products)}function saveB(){lsSet(BKEY,S.bikes)}
+function cp(c,o){if(window.LLCloud&&o)window.LLCloud.put(c,o)}
+function cd(c,id){if(window.LLCloud)window.LLCloud.del(c,id)}
+var adm=function(){return S.role==="admin"};
+function ymd(d){return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function pd(s){var p=s.split("-");return new Date(+p[0],+p[1]-1,+p[2])}
+function addDays(s,n){var d=pd(s);d.setDate(d.getDate()+n);return ymd(d)}
+function monday(s){var d=pd(s);d.setDate(d.getDate()-(d.getDay()+6)%7);return ymd(d)}
+function money(n){return Math.round(+n||0).toLocaleString("en-US")}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function dlabel(s){return pd(s).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"})}
+function opts(arr,sel){return arr.map(function(x){return '<option'+(x===sel?' selected':'')+'>'+x+'</option>'}).join("")}
+function prodOf(id){return S.products.find(function(x){return x.id===id})}
+function bikeOf(id){return S.bikes.find(function(x){return x.id===id})}
+function bikeDesc(b){return [b.brand,b.color,b.size].filter(Boolean).join(" ")}
+function bikeLabel(b){return "Bike "+b.tag+" · "+bikeDesc(b)}
+function bikeText(b){return [b.tag,b.brand,b.color,b.size,b.note].join(" ").toLowerCase()}
+function tot(e){return (+e.qty||0)*(+e.price||0)}
+function cst(e){if(e.type!=="Sale")return 0;var c=+e.cost||0;if(!c){var o=e.bikeId?bikeOf(e.bikeId):e.productId?prodOf(e.productId):null;c=o?+o.cost||0:0}return (+e.qty||0)*c}
+function stockOf(id){var p=prodOf(id),n=p?+p.open||0:0;S.entries.forEach(function(e){if(e.productId===id){if(e.type==="Sale")n-=+e.qty||0;else if(e.type==="Restock")n+=+e.qty||0}});return n}
+function inRange(a,b){return S.entries.filter(function(e){return e.date>=a&&e.date<=b})}
+function sum(list){
+  var r={sales:0,exp:0,cost:0,count:0,costKnown:true,by:{},top:{}};
+  list.forEach(function(e){
+    var t=tot(e);
+    if(e.type==="Sale"){r.sales+=t;r.cost+=cst(e);r.count++;if(!(cst(e)>0))r.costKnown=false;
+      r.by[e.method]=(r.by[e.method]||0)+t;
+      var k=(e.item||"").trim().toLowerCase();if(k){var o=r.top[k]||(r.top[k]={name:e.item.trim(),qty:0,amt:0});o.qty+=+e.qty||0;o.amt+=t}}
+    else r.exp+=t});
+  r.profit=r.sales-r.cost;r.net=r.sales-r.exp;return r}
+function stats(r){
+  if(!adm())return '<div class="stats"><div class="stat"><small>Sales</small><b class="in">'+money(r.sales)+'</b></div><div class="stat"><small>Sales made</small><b>'+r.count+'</b></div></div>';
+  return '<div class="stats"><div class="stat"><small>Sales</small><b class="in">'+money(r.sales)+'</b></div>'+
+  '<div class="stat"><small>Expenses (restock, other)</small><b class="out">'+money(r.exp)+'</b></div>'+
+  '<div class="stat"><small>Sales minus expenses</small><b class="'+(r.net<0?"out":"in")+'">'+money(r.net)+'</b></div>'+
+  '<div class="stat"><small>Profit on goods sold'+(r.costKnown?'':' (some costs missing)')+'</small><b>'+money(r.profit)+'</b></div></div>'}
+function extras(r){
+  var by=Object.keys(r.by).map(function(k){return '<tr><td>'+esc(k)+'</td><td class="n">'+money(r.by[k])+'</td></tr>'}).join("");
+  var top=Object.keys(r.top).map(function(k){return r.top[k]}).sort(function(a,b){return b.amt-a.amt}).slice(0,8).map(function(o){return '<tr><td>'+esc(o.name)+'</td><td class="n">'+o.qty+'</td><td class="n">'+money(o.amt)+'</td></tr>'}).join("");
+  return '<div class="two"><div><h2>Sales by payment</h2><div class="wrap"><table style="min-width:0"><tbody>'+(by||'<tr><td class="empty">No sales yet</td></tr>')+'</tbody></table></div></div>'+
+  '<div><h2>Best-selling items</h2><div class="wrap"><table style="min-width:0"><thead><tr><th>Item</th><th class="n">Qty</th><th class="n">Amount</th></tr></thead><tbody>'+(top||'<tr><td colspan="3" class="empty">No sales yet</td></tr>')+'</tbody></table></div></div></div>'}
+
+function formHTML(){
+  var f=S.form,a=adm(),sale=f.type==="Sale",res=f.type==="Restock";
+  var ph=sale?"Search a product or bike tag":res?"Search a product":"e.g. Rent, transport";
+  var L=function(c,t,x){return '<label class="'+c+'">'+t+x+'</label>'};
+  var h='<form class="form" id="f" onsubmit="return false">';
+  if(a)h+=L("s1","Type",'<select id="ty">'+opts(["Sale","Restock","Expense"],f.type)+'</select>');
+  h+='<label class="'+(a?"s2":"s3")+'" style="position:relative">'+(sale||res?"Item":"Description")+'<div id="sg" class="sg"></div><input id="it" required autocomplete="off" placeholder="'+ph+'"></label>';
+  h+=L("s1","Qty",'<input id="q" type="number" min="0" step="any" value="1" inputmode="decimal">');
+  h+=L("s1",sale?"Selling price each":res?"Buying cost each":"Amount",'<input id="p" type="number" min="0" step="any" inputmode="decimal" required>');
+  if(sale&&a)h+=L("s1","Buying cost each",'<input id="c" type="number" min="0" step="any" inputmode="decimal">');
+  h+=L("s1","Paid with",sale?'<select id="m">'+opts(METHODS,f.method)+'</select>':'<select id="m2">'+opts(METHODS.slice(0,3),f.method)+'</select>');
+  h+=L(sale&&a?"s4":"s5","Note (customer name for credit)",'<input id="nt">');
+  return h+'<div style="align-self:end"><button class="btn pri" id="add" style="width:100%">Add entry</button></div></form>'}
+
+function dayView(){
+  var list=S.entries.filter(function(e){return e.date===S.date&&(adm()||e.type==="Sale")}).sort(function(a,b){return a.id-b.id});
+  var r=sum(list),a=adm();
+  var h='<div class="bar"><button class="btn" data-d="-1">‹ Prev</button><input type="date" id="dt" value="'+S.date+'"><button class="btn" data-d="1">Next ›</button><button class="btn" data-d="0">Today</button></div>';
+  h+=stats(r)+formHTML();
+  h+='<div class="wrap"><table class="stack"><thead><tr><th>Type</th><th>Item</th><th class="n">Qty</th><th class="n">Price</th><th class="n">Total</th><th>Paid with</th><th>Note</th><th></th></tr></thead><tbody>';
+  if(!list.length)h+='<tr><td colspan="8" class="empty">Nothing recorded for '+dlabel(S.date)+'. Add the first entry above.</td></tr>';
+  list.forEach(function(e){h+='<tr><td data-label="Type" class="'+(e.type==="Sale"?"in":"out")+'">'+e.type+'</td><td data-label="Item">'+esc(e.item)+'</td><td class="n" data-label="Qty">'+e.qty+'</td><td class="n" data-label="Price">'+money(e.price)+'</td><td class="n" data-label="Total">'+money(tot(e))+'</td><td data-label="Paid with">'+esc(e.method)+'</td><td data-label="Note">'+esc(e.note)+'</td><td>'+(a?'<button class="x" data-x="'+e.id+'" aria-label="Delete entry">✕</button>':'')+'</td></tr>'});
+  return h+'</tbody></table></div>'+extras(r)}
+
+function periodTable(days){
+  var rows="",T={s:0,e:0,c:0};
+  days.forEach(function(d){var r=sum(S.entries.filter(function(e){return e.date===d}));
+    T.s+=r.sales;T.e+=r.exp;T.c+=r.count;
+    rows+='<tr class="go" data-go="'+d+'"><td>'+dlabel(d)+'</td><td class="n">'+r.count+'</td><td class="n in">'+money(r.sales)+'</td><td class="n out">'+money(r.exp)+'</td><td class="n">'+money(r.net)+'</td></tr>'});
+  return '<div class="wrap"><table style="min-width:0"><thead><tr><th>Day</th><th class="n">Sales made</th><th class="n">Sales</th><th class="n">Expenses</th><th class="n">Net</th></tr></thead><tbody>'+rows+'</tbody><tfoot><tr><td>Total</td><td class="n">'+T.c+'</td><td class="n">'+money(T.s)+'</td><td class="n">'+money(T.e)+'</td><td class="n">'+money(T.s-T.e)+'</td></tr></tfoot></table></div>'}
+function cmpText(r,pr,w){return pr.sales?(r.sales>=pr.sales?'<span class="in">up ':'<span class="out">down ')+Math.abs(Math.round((r.sales-pr.sales)/pr.sales*100))+'% on last '+w+'</span>':''}
+function weekView(){
+  var a=monday(S.date),b=addDays(a,6),days=[];for(var i=0;i<7;i++)days.push(addDays(a,i));
+  var r=sum(inRange(a,b)),pr=sum(inRange(addDays(a,-7),addDays(a,-1)));
+  return '<div class="bar"><button class="btn" data-d="-7">‹ Last week</button><b>'+dlabel(a)+' – '+dlabel(b)+'</b><button class="btn" data-d="7">Next week ›</button><button class="btn" data-d="0">This week</button></div><p style="margin:0 0 8px;color:var(--mut)">'+cmpText(r,pr,"week")+'</p>'+stats(r)+periodTable(days)+extras(r)}
+function monthView(){
+  var m=S.date.slice(0,7),a=m+"-01",d=pd(a),n=new Date(d.getFullYear(),d.getMonth()+1,0).getDate(),b=m+"-"+String(n).padStart(2,"0"),days=[];
+  for(var i=0;i<n;i++)days.push(addDays(a,i));
+  var r=sum(inRange(a,b)),pr=sum(inRange(ymd(new Date(d.getFullYear(),d.getMonth()-1,1)),ymd(new Date(d.getFullYear(),d.getMonth(),0))));
+  return '<div class="bar"><button class="btn" data-m="-1">‹ Last month</button><input type="month" id="mo" value="'+m+'"><button class="btn" data-m="1">Next month ›</button><button class="btn" data-m="0">This month</button></div><p style="margin:0 0 8px;color:var(--mut)">'+cmpText(r,pr,"month")+'</p>'+stats(r)+periodTable(days)+extras(r)}
+
+function bikeCards(){
+  var q=(S.bq||"").trim().toLowerCase(),a=adm();
+  var list=S.bikes.filter(function(b){return (S.bf==="All"||(S.bf==="Sold")===(b.status==="Sold"))&&(!q||bikeText(b).indexOf(q)>-1)})
+    .sort(function(x,y){return (String(y.tag).toLowerCase()===q)-(String(x.tag).toLowerCase()===q)||String(x.tag).localeCompare(String(y.tag),undefined,{numeric:true})});
+  if(!list.length)return '<div class="empty">'+(S.bikes.length?'No bicycle matches. Try another tag or change the filter.':'No bicycles yet.'+(a?' Add the first one above.':''))+'</div>';
+  return list.map(function(b){var sold=b.status==="Sold";
+    return '<div class="bike"><div class="bt">'+esc(b.tag)+'</div><div class="bd"><b>'+esc(b.brand||"Bicycle")+'</b><span>Color: '+esc(b.color||"–")+'</span><span>Size: '+esc(b.size||"–")+'</span><span>Price: '+money(b.sell)+'</span>'+(a&&b.cost?'<span>Cost: '+money(b.cost)+'</span>':'')+(b.note?'<span>'+esc(b.note)+'</span>':'')+(sold&&b.soldDate?'<span>Sold '+esc(b.soldDate)+'</span>':'')+'</div>'+
+    '<div class="badge '+(sold?'out':'in')+'">'+(sold?"Sold":"Available")+'</div>'+
+    '<div class="bk">'+(sold?'':'<button class="btn pri" data-sell="'+b.id+'">Sell</button>')+(a&&!sold?'<button class="btn" data-be="'+b.id+'">Edit</button><button class="btn" data-bx="'+b.id+'">Remove</button>':'')+'</div></div>'}).join("")}
+function bikesView(){
+  var a=adm(),e=S.editBike?bikeOf(S.editBike):null,v=function(k){return e?esc(e[k]):""};
+  var h='';
+  if(a)h+='<h2>'+(e?'Edit bicycle '+esc(e.tag):'Add a bicycle')+'</h2><form class="form" onsubmit="return false"><label>Tag number<input id="bt" value="'+v("tag")+'" placeholder="e.g. 020" inputmode="numeric"></label><label class="s2">Brand or model<input id="bb" value="'+v("brand")+'"></label><label>Color<input id="bc" value="'+v("color")+'"></label><label>Size<input id="bs" value="'+v("size")+'" placeholder="e.g. 26 inch"></label><label>Selling price<input id="bp" type="number" min="0" step="any" value="'+v("sell")+'"></label><label>Buying cost<input id="bco" type="number" min="0" step="any" value="'+v("cost")+'"></label><label class="s4">Note (condition, details)<input id="bn" value="'+v("note")+'"></label><div class="s6" style="display:flex;gap:6px"><button class="btn pri" id="badd">'+(e?'Save changes':'Add bicycle')+'</button>'+(e?'<button class="btn" id="bcancel">Cancel</button>':'')+'</div></form>';
+  h+='<h2>Find a bicycle</h2><div class="bar"><input type="search" id="bq" value="'+esc(S.bq)+'" placeholder="Type the tag number, brand or color" autocomplete="off"><select id="bf">'+opts(["Available","Sold","All"],S.bf)+'</select></div>';
+  return h+'<div id="bres">'+bikeCards()+'</div>'}
+function saveBike(){
+  var g=function(i){return document.getElementById(i).value.trim()};
+  var tag=g("bt");if(!tag){document.getElementById("bt").focus();return}
+  if(S.bikes.some(function(b){return b.id!==S.editBike&&String(b.tag).toLowerCase()===tag.toLowerCase()})){alert("Tag "+tag+" is already used by another bicycle.");return}
+  var b=S.editBike?bikeOf(S.editBike):null;
+  if(!b){b={id:"b"+Date.now(),status:"Available",soldDate:"",saleId:""};S.bikes.push(b)}
+  b.tag=tag;b.brand=g("bb");b.color=g("bc");b.size=g("bs");b.sell=parseFloat(g("bp"))||0;b.cost=parseFloat(g("bco"))||0;b.note=g("bn");
+  S.editBike=null;saveB();cp("bikes",b);render()}
+
+function productsView(){
+  var a=adm(),val=0,lowN=0;
+  var rows=S.products.slice().sort(function(x,y){return x.name.localeCompare(y.name)}).map(function(p){var st=stockOf(p.id),isLow=st<=(+p.low||0);if(isLow)lowN++;val+=Math.max(0,st)*(+p.cost||0);
+    var stk='<td class="n '+(isLow?"low":"")+'" data-label="In stock">'+st+'</td>';
+    if(!a)return '<tr><td class="pname">'+esc(p.name)+'</td><td class="n" data-label="Selling price">'+money(p.sell)+'</td>'+stk+'</tr>';
+    var inp=function(f,l){return '<td class="n" data-label="'+l+'"><input class="sm" type="number" min="0" step="any" value="'+(+p[f]||0)+'" data-pf="'+f+'" data-pid="'+p.id+'"></td>'};
+    return '<tr><td class="pname">'+esc(p.name)+'</td>'+inp("sell","Selling price")+inp("cost","Buying cost")+inp("open","Opening stock")+inp("low","Warn at")+stk+'<td class="n" data-label="Stock value">'+money(Math.max(0,st)*(+p.cost||0))+'</td><td><button class="x" data-px="'+p.id+'" aria-label="Delete product">✕</button></td></tr>'}).join("");
+  var h=a?'<h2>Add a product</h2><form class="form" onsubmit="return false"><label class="s2">Name<input id="pn" placeholder="e.g. Tube 26 inch"></label><label>Selling price<input id="ps" type="number" min="0" step="any"></label><label>Buying cost<input id="pc" type="number" min="0" step="any"></label><label>Stock now<input id="po" type="number" min="0" step="any" value="0"></label><label>Warn at<input id="pl" type="number" min="0" step="any" value="2"></label><div class="s6"><button class="btn pri" id="padd">Add product</button></div></form>':'';
+  h+=(lowN?'<p class="low">'+lowN+' product(s) at or below the warning level.</p>':'');
+  h+='<div class="wrap"><table class="stack"><thead><tr><th>Product</th><th class="n">Selling price</th>'+(a?'<th class="n">Buying cost</th><th class="n">Opening stock</th><th class="n">Warn at</th>':'')+'<th class="n">In stock</th>'+(a?'<th class="n">Stock value</th><th></th>':'')+'</tr></thead><tbody>'+(rows||'<tr><td colspan="8" class="empty">No products yet.'+(a?' Add your first product above.':'')+'</td></tr>')+'</tbody>'+(a?'<tfoot><tr><td colspan="6">Value of stock at buying cost</td><td class="n">'+money(val)+'</td><td></td></tr></tfoot>':'')+'</table></div>';
+  return h+(a?'<p class="note">In stock = opening stock + restocks − sales. Record restocks in the Day tab with type Restock. Opening stock is for fixing the count when it is wrong.</p>':'')}
+function addProduct(){
+  var g=function(i){return document.getElementById(i).value};var name=g("pn").trim();if(!name){document.getElementById("pn").focus();return}
+  if(S.products.some(function(p){return p.name.toLowerCase()===name.toLowerCase()})){alert("This product is already in the list.");return}
+  S.products.push({id:"p"+Date.now(),name:name,sell:parseFloat(g("ps"))||0,cost:parseFloat(g("pc"))||0,open:parseFloat(g("po"))||0,low:parseFloat(g("pl"))||0});saveP();cp("products",S.products[S.products.length-1]);render()}
+
+function fillProduct(id){var p=prodOf(id);if(!p)return;S.pickBike=null;var s=function(i,v){var x=document.getElementById(i);if(x)x.value=v};s("it",p.name);if(S.form.type==="Sale"){s("p",p.sell||"");s("c",p.cost||"")}else s("p",p.cost||"");var sg=document.getElementById("sg");if(sg)sg.innerHTML=""}
+function fillBike(id){var b=bikeOf(id);if(!b)return;S.pickBike=id;var s=function(i,v){var x=document.getElementById(i);if(x)x.value=v};s("it",bikeLabel(b));s("q",1);s("p",b.sell||"");s("c",b.cost||"");var sg=document.getElementById("sg");if(sg)sg.innerHTML=""}
+function suggest(){
+  var it=document.getElementById("it"),sg=document.getElementById("sg");if(!it||!sg)return;var t=S.form.type;if(t==="Expense"){sg.innerHTML="";return}
+  var q=it.value.trim().toLowerCase(),a=adm(),out=[];
+  if(t==="Sale")S.bikes.filter(function(b){return b.status!=="Sold"&&(!q||bikeText(b).indexOf(q)>-1)}).sort(function(x,y){return (String(y.tag).toLowerCase()===q)-(String(x.tag).toLowerCase()===q)||String(x.tag).localeCompare(String(y.tag),undefined,{numeric:true})}).slice(0,5).forEach(function(b){out.push('<button type="button" data-bike="'+b.id+'"><span>Bike '+esc(b.tag)+' · '+esc(bikeDesc(b))+'</span><span>'+money(b.sell)+'</span></button>')});
+  S.products.filter(function(p){return !q||p.name.toLowerCase().indexOf(q)>-1}).slice(0,6).forEach(function(p){out.push('<button type="button" data-pick="'+p.id+'"><span>'+esc(p.name)+'</span><span>'+money(t==="Sale"?p.sell:p.cost)+' · '+stockOf(p.id)+' in stock</span></button>')});
+  sg.innerHTML=out.join("")}
+function add(){
+  var g=function(i){var x=document.getElementById(i);return x?x.value:""};
+  var type=adm()?S.form.type:"Sale",sale=type==="Sale";
+  var item=g("it").trim(),price=parseFloat(g("p")),qty=parseFloat(g("q"));
+  if(!item){document.getElementById("it").focus();return}
+  if(!(price>=0)){document.getElementById("p").focus();return}
+  if(!(qty>0)){document.getElementById("q").focus();return}
+  var method=sale?g("m"):g("m2"),note=g("nt").trim();
+  if(sale&&method==="Credit"&&!note){alert("Enter the customer’s name in the note for a credit sale.");document.getElementById("nt").focus();return}
+  var b=S.pickBike?bikeOf(S.pickBike):null;if(!(b&&sale&&b.status!=="Sold"&&item===bikeLabel(b)))b=null;
+  if(b)qty=1;
+  var pid=b?"":(S.products.find(function(x){return x.name.toLowerCase()===item.toLowerCase()})||{}).id||"";
+  if(pid&&sale&&qty>stockOf(pid)&&!confirm("Only "+stockOf(pid)+" in stock. Record the sale anyway?"))return;
+  if(pid&&type==="Restock"){var pp=prodOf(pid);if(pp){pp.cost=price;saveP();cp("products",pp)}}
+  var en={id:Date.now(),date:S.date,type:type,item:item,productId:pid,bikeId:b?b.id:"",qty:qty,price:price,cost:sale&&adm()?(parseFloat(g("c"))||0):0,method:method,note:note};
+  S.entries.push(en);cp("entries",en);
+  if(b){b.status="Sold";b.soldDate=S.date;b.saleId=en.id;saveB();cp("bikes",b)}
+  S.pickBike=null;S.form.method=method;save();render();
+  var f=document.getElementById("it");if(f)f.focus()}
+
+var NAMES={day:"Day",week:"Week",month:"Month",bikes:"Bikes",products:"Products"};
+function allowed(){return adm()?["day","week","month","bikes","products"]:["day","bikes","products"]}
+function render(){
+  if(allowed().indexOf(S.view)<0)S.view="day";
+  document.body.classList.toggle("att",!adm());
+  document.getElementById("tabs").innerHTML=allowed().map(function(v){return '<button role="tab" data-v="'+v+'" aria-selected="'+(v===S.view)+'">'+NAMES[v]+'</button>'}).join("");
+  document.getElementById("view").innerHTML=S.view==="day"?dayView():S.view==="week"?weekView():S.view==="month"?monthView():S.view==="bikes"?bikesView():productsView()}
+function setRole(r){S.role=r==="attendant"?"attendant":"admin";if(S.role!=="admin")S.form.type="Sale";render()}
+
+document.getElementById("tabs").addEventListener("click",function(e){var v=e.target.dataset.v;if(v){S.view=v;render()}});
+var vw=document.getElementById("view");
+vw.addEventListener("click",function(e){
+  var t=e.target,row=t.closest("[data-go]");
+  if(t.dataset.d!==undefined){var n=+t.dataset.d;S.date=n===0?ymd(new Date()):addDays(S.date,n);render();return}
+  if(t.dataset.m!==undefined){var n2=+t.dataset.m;if(n2===0)S.date=ymd(new Date());else{var d=pd(S.date);d.setDate(1);d.setMonth(d.getMonth()+n2);S.date=ymd(d)}render();return}
+  if(t.dataset.x){if(!adm())return;var id=t.dataset.x,en=S.entries.find(function(x){return String(x.id)===id});
+    if(en&&confirm("Delete this entry?")){if(en.bikeId){var bb=bikeOf(en.bikeId);if(bb&&String(bb.saleId)===id){bb.status="Available";bb.soldDate="";bb.saleId="";saveB();cp("bikes",bb)}}
+      cd("entries",id);S.entries=S.entries.filter(function(x){return String(x.id)!==id});save();render()}return}
+  var bk=t.closest("[data-bike]");if(bk){fillBike(bk.dataset.bike);var q1=document.getElementById("p");if(q1)q1.focus();return}
+  var pk=t.closest("[data-pick]");if(pk){fillProduct(pk.dataset.pick);var q0=document.getElementById("q");if(q0){q0.focus();q0.select()}return}
+  if(t.dataset.sell){S.view="day";S.form.type="Sale";S.date=ymd(new Date());render();fillBike(t.dataset.sell);scrollTo(0,0);return}
+  if(t.dataset.be){S.editBike=t.dataset.be;render();scrollTo(0,0);return}
+  if(t.dataset.bx){var b2=bikeOf(t.dataset.bx);if(b2&&confirm("Remove bicycle "+b2.tag+" from the list?")){cd("bikes",b2.id);S.bikes=S.bikes.filter(function(x){return x.id!==b2.id});saveB();render()}return}
+  if(t.id==="badd"){saveBike();return}
+  if(t.id==="bcancel"){S.editBike=null;render();return}
+  if(t.id==="padd"){addProduct();return}
+  if(t.dataset.px){if(confirm("Delete this product? Past entries keep their item names.")){cd("products",t.dataset.px);S.products=S.products.filter(function(p){return p.id!==t.dataset.px});saveP();render()}return}
+  if(t.id==="add"){add();return}
+  if(row){S.date=row.dataset.go;S.view="day";render()}});
+vw.addEventListener("input",function(e){
+  var id=e.target.id;
+  if(id==="it"){S.pickBike=S.pickBike&&bikeOf(S.pickBike)&&e.target.value===bikeLabel(bikeOf(S.pickBike))?S.pickBike:null;suggest()}
+  if(id==="bq"){S.bq=e.target.value;var r=document.getElementById("bres");if(r)r.innerHTML=bikeCards()}});
+vw.addEventListener("focusin",function(e){if(e.target.id==="it")suggest()});
+vw.addEventListener("change",function(e){
+  var t=e.target;
+  if(t.id==="dt"&&t.value){S.date=t.value;render()}
+  if(t.id==="mo"&&t.value){S.date=t.value+"-01";render()}
+  if(t.id==="ty"){S.form.type=t.value;S.pickBike=null;render()}
+  if(t.id==="m"||t.id==="m2")S.form.method=t.value;
+  if(t.id==="bf"){S.bf=t.value;var r=document.getElementById("bres");if(r)r.innerHTML=bikeCards()}
+  if(t.dataset.pf){var pp=prodOf(t.dataset.pid);if(pp){pp[t.dataset.pf]=parseFloat(t.value)||0;saveP();cp("products",pp);render()}}});
+document.addEventListener("click",function(e){if(!e.target.closest("#sg")&&e.target.id!=="it"){var sg=document.getElementById("sg");if(sg)sg.innerHTML=""}});
+
+document.getElementById("csv").onclick=function(){
+  var q=function(v){return '"'+String(v==null?"":v).replace(/"/g,'""')+'"'};
+  var rows=[["Date","Type","Item","Qty","Price each","Total","Cost each","Paid with","Note"]];
+  S.entries.slice().sort(function(a,b){return a.date<b.date?-1:a.date>b.date?1:a.id-b.id}).forEach(function(e){rows.push([e.date,e.type,e.item,e.qty,e.price,tot(e),e.cost||"",e.method,e.note])});
+  dl("\ufeff"+rows.map(function(r){return r.map(q).join(",")}).join("\r\n"),"ledger-"+ymd(new Date())+".csv","text/csv")};
+document.getElementById("bk").onclick=function(){dl(JSON.stringify({entries:S.entries,products:S.products,bikes:S.bikes}),"ledger-backup-"+ymd(new Date())+".json","application/json")};
+document.getElementById("rs").onclick=function(){document.getElementById("file").click()};
+document.getElementById("file").onchange=function(e){
+  var f=e.target.files[0];if(!f)return;var r=new FileReader();
+  r.onload=function(){try{var o=JSON.parse(r.result),a=Array.isArray(o)?o:o.entries;if(!Array.isArray(a))throw 0;
+    if(confirm("Replace the current ledger with "+a.length+" entries from this backup?")){S.entries=a;if(o&&Array.isArray(o.products))S.products=o.products;if(o&&Array.isArray(o.bikes))S.bikes=o.bikes;
+      if(window.LLCloud){S.entries.forEach(function(x){cp("entries",x)});S.products.forEach(function(x){cp("products",x)});S.bikes.forEach(function(x){cp("bikes",x)})}
+      save();saveP();saveB();render()}}catch(x){alert("That file is not a ledger backup.")}};
+  r.readAsText(f);e.target.value=""};
+function dl(text,name,type){var a=document.createElement("a");a.href="data:"+type+";charset=utf-8,"+encodeURIComponent(text);a.download=name;document.body.appendChild(a);a.click();a.remove()}
+document.getElementById("theme").onclick=function(){var r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark"};
+window.LLApp={S:S,render:render,save:save,saveP:saveP,saveB:saveB,setRole:setRole};
+load();render();
+})();
+</script>
+<script type="module" src="cloud.js"></script>
+<script>if("serviceWorker" in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})</script>
+</body>
 </html>
